@@ -8,10 +8,11 @@ const BoardContainer = styled.div`
   overflow: hidden;
   flex-wrap: wrap;
   width: auto;
-  max-width: 80vh;
+  max-width: 90vh;
+  max-height: 90vh;
   aspect-ratio: 1;
-  margin: 40px;
   border-radius: 6px;
+  resize: vertical;
 `;
 
 export default function Board({ isWhitePlayer = true }) {
