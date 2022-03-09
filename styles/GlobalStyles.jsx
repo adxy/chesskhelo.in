@@ -23,8 +23,14 @@ a, a:focus {
   outline: none;
 }
 .disable-scroll{
-  overflow:hidden;
-  position:relative;
+  overflow: hidden;
+  position: relative;
+}
+.hide{
+    display: none;
+}
+.drag-over {
+    border: solid 4px #FFFFFF;
 }
 `;
 
