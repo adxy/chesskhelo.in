@@ -1,4 +1,5 @@
 export const ALPHABETS = ["a", "b", "c", "d", "e", "f", "g", "h"];
+export const MOVE_COLOR_WHITE = "w";
 export const PIECE_DEFAULT_POSITION_LIST = {
   a8: "br",
   b8: "bn",
@@ -33,3 +34,29 @@ export const PIECE_DEFAULT_POSITION_LIST = {
   g2: "wp",
   h2: "wp",
 };
+
+// Chess Move Event Flags
+export const NON_CAPTURE = "n";
+export const PAWN_PUSH_TWO_SQUARES = "b";
+export const EN_PASSANT_CAPTURE = "e";
+export const STANDARD_CAPTURE = "c";
+export const PROMOTION = "p";
+export const KING_SIDE_CASTLING = "k";
+export const QUEEN_SIDE_CASTLING = "q";
+
+// IDs
+export const CHESS_BOARD_ID = "chess-board";
+export const WHITE_ROOK_KING_SIDE_ID = "h1-wr";
+export const WHITE_ROOK_QUEEN_SIDE_ID = "a1-wr";
+export const BLACK_ROOK_KING_SIDE_ID = "h8-br";
+export const BLACK_ROOK_QUEEN_SIDE_ID = "a8-br";
+
+// Castling Rook's Destination IDs
+export const CASTLED_WHITE_ROOK_KING_SIDE_DESTINATION_ID = "f1";
+export const CASTLED_WHITE_ROOK_QUEEN_SIDE_DESTINATION_ID = "d1";
+export const CASTLED_BLACK_ROOK_KING_SIDE_DESTINATION_ID = "f8";
+export const CASTLED_BLACK_ROOK_QUEEN_SIDE_DESTINATION_ID = "d8";
+
+// Square Types
+export const SQUARE_TYPE_LIGHT = "l";
+export const SQUARE_TYPE_DARK = "d";

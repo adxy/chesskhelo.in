@@ -1,5 +1,5 @@
 import Board from "../components/Board/Board";
 
 export default function Home() {
-  return <Board isWhitePlayer={true} />;
+  return <Board isWhitePlayer={true} isPlayable={true} />;
 }
