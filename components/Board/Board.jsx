@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Square from "./Square";
 import {
@@ -19,8 +19,18 @@ import {
   SQUARE_TYPE_LIGHT,
   STANDARD_CAPTURE,
   WHITE_ROOK_QUEEN_SIDE_ID,
+  WHITE_ROOK_KING_SIDE_ID,
+  WHITE_KING_ID,
+  BLACK_KING_ID,
+  CASTLED_WHITE_KING_QUEEN_SIDE_DESTINATION_ID,
+  CASTLED_BLACK_KING_QUEEN_SIDE_DESTINATION_ID,
+  CASTLED_WHITE_KING_KING_SIDE_DESTINATION_ID,
+  CASTLED_BLACK_KING_KING_SIDE_DESTINATION_ID,
+  NON_CAPTURE_PROMOTION,
+  CAPTURE_PROMOTION,
 } from "../../utils/constants";
 import Chess from "../../utils/moveValidation";
+import PawnPromotionDialogue from "./PawnPromotionDialogue";
 
 const BoardContainer = styled.div`
   display: flex;
@@ -34,24 +44,195 @@ const BoardContainer = styled.div`
   resize: vertical;
 `;
 
+const OuterBoardContainer = styled.div`
+  position: absolute;
+  align-items: center;
+  justify-contents: center;
+`;
+
+const chess = new Chess();
+
 export default function Board({ isWhitePlayer = true, isPlayable = false }) {
   let boardProperties = [];
 
+  const [showPawnPromotionDialogue, setShowPawnPromotionDialogue] =
+    useState(false);
+  const [promotionMoves, setPromotionMoves] = useState({
+    from: "",
+    to: "",
+  });
+  const [piecesPromotedCount, setPiecesPromotedCount] = useState(0);
+
+  const isPromotion = ({ from, to }) => {
+    const piece = chess.get(from);
+
+    if (piece?.type !== "p") {
+      return false;
+    }
+
+    if (piece.color !== chess.turn()) {
+      return false;
+    }
+
+    if (!["1", "8"].some((num) => to.endsWith(num))) {
+      return false;
+    }
+
+    return chess
+      .moves({ square: from, verbose: true })
+      .map((move) => move.to)
+      .includes(to);
+  };
+
+  const makeMove = ({ from, to, promotion = 0 }) => {
+    const moveObject = { from, to };
+    if (promotion) {
+      moveObject.promotion = promotion;
+    }
+
+    const move = chess.move(moveObject);
+
+    if (move) {
+      const destinationSquare = document.getElementById(to);
+      const draggedPiece = document.getElementById(from).firstChild;
+      const destinationPiece = document.getElementById(to).firstChild;
+      destinationSquare.classList.remove("drag-over");
+
+      switch (move.flags) {
+        case STANDARD_CAPTURE:
+          destinationSquare.removeChild(destinationPiece);
+          destinationSquare.appendChild(draggedPiece);
+          break;
+
+        case KING_SIDE_CASTLING:
+          handleCastling({
+            moveColor: move.color,
+          });
+          break;
+
+        case QUEEN_SIDE_CASTLING:
+          handleCastling({
+            moveColor: move.color,
+            kingSide: false,
+          });
+          break;
+
+        case NON_CAPTURE_PROMOTION:
+          handlePawnPromotion({
+            draggedPiece,
+            color: move.color,
+            promotion,
+            destinationSquare,
+          });
+          break;
+
+        case CAPTURE_PROMOTION:
+          handlePawnPromotion({
+            draggedPiece,
+            color: move.color,
+            promotion,
+            destinationSquare,
+            capture: true,
+          });
+          break;
+
+        default:
+          destinationSquare.appendChild(draggedPiece);
+      }
+    }
+  };
+
+  const handleCastling = ({ moveColor, kingSide = true }) => {
+    let rookPositionId =
+      moveColor === MOVE_COLOR_WHITE
+        ? WHITE_ROOK_QUEEN_SIDE_ID
+        : BLACK_ROOK_QUEEN_SIDE_ID;
+
+    const kingPositionId =
+      moveColor === MOVE_COLOR_WHITE ? WHITE_KING_ID : BLACK_KING_ID;
+
+    let rookDestinationId =
+      moveColor === MOVE_COLOR_WHITE
+        ? CASTLED_WHITE_ROOK_QUEEN_SIDE_DESTINATION_ID
+        : CASTLED_BLACK_ROOK_QUEEN_SIDE_DESTINATION_ID;
+
+    let kingDestinationId =
+      moveColor === MOVE_COLOR_WHITE
+        ? CASTLED_WHITE_KING_QUEEN_SIDE_DESTINATION_ID
+        : CASTLED_BLACK_KING_QUEEN_SIDE_DESTINATION_ID;
+
+    if (kingSide) {
+      rookPositionId =
+        moveColor === MOVE_COLOR_WHITE
+          ? WHITE_ROOK_KING_SIDE_ID
+          : BLACK_ROOK_KING_SIDE_ID;
+
+      rookDestinationId =
+        moveColor === MOVE_COLOR_WHITE
+          ? CASTLED_WHITE_ROOK_KING_SIDE_DESTINATION_ID
+          : CASTLED_BLACK_ROOK_KING_SIDE_DESTINATION_ID;
+
+      kingDestinationId =
+        moveColor === MOVE_COLOR_WHITE
+          ? CASTLED_WHITE_KING_KING_SIDE_DESTINATION_ID
+          : CASTLED_BLACK_KING_KING_SIDE_DESTINATION_ID;
+    }
+
+    const king = document.getElementById(kingPositionId);
+    const rook = document.getElementById(rookPositionId);
+    const rookDestination = document.getElementById(rookDestinationId);
+    const kingDestination = document.getElementById(kingDestinationId);
+    rook.parentElement.removeChild(rook);
+    king.parentElement.removeChild(king);
+    rookDestination.appendChild(rook);
+    kingDestination.appendChild(king);
+  };
+
+  const handlePawnPromotion = ({
+    draggedPiece,
+    color,
+    promotion,
+    destinationSquare,
+    capture,
+  }) => {
+    draggedPiece.parentElement.removeChild(draggedPiece);
+    const promotedPiece = document.createElement("img");
+    promotedPiece.src = `/images/pieces/${color}${promotion}.png`;
+    promotedPiece.draggable = true;
+    promotedPiece.className = "piece";
+    promotedPiece.id = `p-piece-${piecesPromotedCount}`;
+    promotedPiece.style.objectFit = "contain";
+    promotedPiece.style.height = "100%";
+    promotedPiece.style.width = "100%";
+    if (capture) {
+      destinationSquare.removeChild(destinationSquare.firstChild);
+    }
+    destinationSquare.appendChild(promotedPiece);
+    promotedPiece.addEventListener("dragstart", dragStart);
+    promotedPiece.addEventListener("dragend", dragEnd);
+    setPiecesPromotedCount(piecesPromotedCount + 1);
+  };
+
+  const handlePawnPromotionDialogue = ({ from, to }) => {
+    setShowPawnPromotionDialogue(true);
+    setPromotionMoves({ from, to });
+  };
+
+  const handleCloseButtonPress = () => setShowPawnPromotionDialogue(false);
+
+  const handlePawnPromotionPieceSelection = ({ piece }) => {
+    const { from, to } = promotionMoves;
+    makeMove({ from, to, promotion: piece });
+    setShowPawnPromotionDialogue(false);
+    setPromotionMoves({ from: "", to: "" });
+  };
+
   if (isPlayable) {
-    const chess = new Chess();
     useEffect(() => {
-      // select all pieces
       const pieces = document.querySelectorAll(".piece");
 
-      // add dragStart eventListener to all
       pieces.forEach((piece) => piece.addEventListener("dragstart", dragStart));
-
-      function dragStart(e) {
-        e.dataTransfer.setData("text/plain", e.target.id);
-        setTimeout(() => {
-          e.target.classList.add("hide");
-        }, 0);
-      }
+      pieces.forEach((piece) => piece.addEventListener("dragend", dragEnd));
 
       const squares = document.querySelectorAll(".square");
 
@@ -61,115 +242,58 @@ export default function Board({ isWhitePlayer = true, isPlayable = false }) {
         square.addEventListener("dragleave", dragLeave);
         square.addEventListener("drop", drop);
       });
-
-      function dragEnter(e) {
-        e.preventDefault();
-        e.target.classList.add("drag-over");
-      }
-
-      function dragOver(e) {
-        e.preventDefault();
-        e.target.classList.add("drag-over");
-      }
-
-      function dragLeave(e) {
-        e.target.classList.remove("drag-over");
-      }
-
-      function drop(element) {
-        // get the draggable element
-        const id = element.dataTransfer.getData("text/plain");
-
-        const draggedPiece = document.getElementById(id);
-
-        const move = chess.move({
-          from: draggedPiece.parentElement.id,
-          to: element.target.classList.contains("piece")
-            ? element.target.parentElement.id
-            : element.target.id,
-        });
-
-        // if move is valid, we proceed
-        if (move) {
-          element.target.classList.remove("drag-over");
-
-          console.log(move);
-          switch (move.flags) {
-            case STANDARD_CAPTURE:
-              const parentElement = element.target.parentElement;
-              parentElement.removeChild(element.target);
-              parentElement.appendChild(draggedPiece);
-              break;
-
-            case KING_SIDE_CASTLING:
-              handleCastling({
-                element,
-                draggedPiece,
-                moveColor: move.color,
-              });
-
-              break;
-
-            case QUEEN_SIDE_CASTLING:
-              handleCastling({
-                element,
-                draggedPiece,
-                moveColor: move.color,
-                kingSide: false,
-              });
-
-              break;
-
-            default:
-              element.target.appendChild(draggedPiece);
-          }
-
-          // display the draggable element
-          draggedPiece.classList.remove("hide");
-        } else {
-          // reset the dragged piece
-          draggedPiece.classList.remove("hide");
-        }
-      }
-    });
-
-    const handleCastling = ({
-      element,
-      draggedPiece,
-      moveColor,
-      kingSide = true,
-    }) => {
-      let rookPositionId =
-        moveColor === MOVE_COLOR_WHITE
-          ? WHITE_ROOK_QUEEN_SIDE_ID
-          : BLACK_ROOK_QUEEN_SIDE_ID;
-
-      let rookDestinationId =
-        moveColor === MOVE_COLOR_WHITE
-          ? CASTLED_WHITE_ROOK_QUEEN_SIDE_DESTINATION_ID
-          : CASTLED_BLACK_ROOK_QUEEN_SIDE_DESTINATION_ID;
-
-      if (kingSide) {
-        rookPositionId =
-          moveColor === MOVE_COLOR_WHITE
-            ? WHITE_ROOK_KING_SIDE_ID
-            : BLACK_ROOK_KING_SIDE_ID;
-
-        rookDestinationId =
-          moveColor === MOVE_COLOR_WHITE
-            ? CASTLED_WHITE_ROOK_KING_SIDE_DESTINATION_ID
-            : CASTLED_BLACK_ROOK_KING_SIDE_DESTINATION_ID;
-      }
-
-      element.target.appendChild(draggedPiece);
-      const rook = document.getElementById(rookPositionId);
-      const rookDestination = document.getElementById(rookDestinationId);
-      rook.parentElement.removeChild(rook);
-      rookDestination.appendChild(rook);
-    };
+    }, []);
   }
 
-  // Generate board properties & arrange pieces to default location
+  const dragStart = (e) => {
+    e.dataTransfer.setData("text/plain", e.target.id);
+    setTimeout(() => {
+      e.target.classList.add("hide");
+    }, 0);
+  };
+
+  const dragEnter = (e) => {
+    e.preventDefault();
+    e.target.classList.add("drag-over");
+  };
+
+  const dragOver = (e) => {
+    e.preventDefault();
+    e.target.classList.add("drag-over");
+  };
+
+  const dragLeave = (e) => {
+    e.target.classList.remove("drag-over");
+  };
+
+  const dragEnd = (e) => {
+    const draggedPiece = document.getElementById(e.path[0].id);
+    draggedPiece.classList.remove("hide");
+  };
+
+  const drop = (element) => {
+    const id = element.dataTransfer.getData("text/plain");
+    const draggedPiece = document.getElementById(id);
+    const dropSquareId = element.target.classList.contains("piece")
+      ? element.target.parentElement.id
+      : element.target.id;
+
+    const isPromotionMove = isPromotion({
+      from: draggedPiece.parentElement.id,
+      to: dropSquareId,
+    });
+
+    if (isPromotionMove) {
+      handlePawnPromotionDialogue({
+        from: draggedPiece.parentElement.id,
+        to: dropSquareId,
+      });
+      return;
+    }
+
+    makeMove({ from: draggedPiece.parentElement.id, to: dropSquareId });
+  };
+
   for (let i = 8; i > 0; i -= 1) {
     for (let j = 8; j > 0; j -= 1) {
       boardProperties.push({
@@ -186,21 +310,29 @@ export default function Board({ isWhitePlayer = true, isPlayable = false }) {
     }
   }
 
-  // Flip board for black player
   if (!isWhitePlayer) {
     boardProperties = boardProperties.reverse();
   }
 
   return (
-    <BoardContainer id={CHESS_BOARD_ID}>
-      {boardProperties.map((value) => (
-        <Square
-          key={value.id}
-          id={value.id}
-          type={value.type}
-          piece={value.piece}
+    <OuterBoardContainer>
+      {showPawnPromotionDialogue && (
+        <PawnPromotionDialogue
+          playerColor={chess.turn()}
+          onClick={handlePawnPromotionPieceSelection}
+          onClickClose={handleCloseButtonPress}
         />
-      ))}
-    </BoardContainer>
+      )}
+      <BoardContainer id={CHESS_BOARD_ID}>
+        {boardProperties.map((value) => (
+          <Square
+            key={value.id}
+            id={value.id}
+            type={value.type}
+            piece={value.piece}
+          />
+        ))}
+      </BoardContainer>
+    </OuterBoardContainer>
   );
 }
