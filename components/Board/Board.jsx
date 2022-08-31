@@ -28,6 +28,7 @@ import {
   CASTLED_BLACK_KING_KING_SIDE_DESTINATION_ID,
   NON_CAPTURE_PROMOTION,
   CAPTURE_PROMOTION,
+  EN_PASSANT_CAPTURE,
 } from "../../utils/constants";
 import Chess from "../../utils/moveValidation";
 import PawnPromotionDialogue from "./PawnPromotionDialogue";
@@ -134,6 +135,14 @@ export default function Board({ isWhitePlayer = true, isPlayable = false }) {
             destinationSquare,
             capture: true,
           });
+          break;
+
+        case EN_PASSANT_CAPTURE:
+          const capturedSquare = document.getElementById(
+            String(move.to[0] + move.from[1])
+          );
+          capturedSquare.removeChild(capturedSquare.firstChild);
+          destinationSquare.appendChild(draggedPiece);
           break;
 
         default:
