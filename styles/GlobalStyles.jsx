@@ -32,6 +32,19 @@ a, a:focus {
 .drag-over {
     border: solid 4px #FFFFFF;
 }
+.visible-mobile {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .visible-mobile {
+    display: inline !important;
+  }
+
+  .hidden-mobile {
+    display: none !important;
+  }
+}
 `;
 
 export default GlobalStyle;
