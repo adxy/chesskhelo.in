@@ -5,15 +5,15 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Nunito Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 button {
-  font-family: 'Nunito Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 a {
-  font-family: 'Nunito Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   text-decoration: none;
-  color: inherit;
+  color: #fe78ab;
   background: transparent;
   border: none;
   margin: 0;
