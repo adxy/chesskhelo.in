@@ -1,10 +1,32 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  compiler: {
-    // ssr and displayName are configured by default
-    styledComponents: true,
-  },
+const envs = {
+  staging: "staging",
+  development: "development",
+  production: "production",
 };
 
-module.exports = nextConfig;
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
+module.exports = withBundleAnalyzer(
+  (() => {
+    let env = process.env.ENV;
+    let config = {
+      compiler: {
+        styledComponents: true,
+      },
+      env: {
+        baseUrl: process.env.BASE_URL,
+        apiBase: process.env.API_BASE,
+      },
+    };
+    if (env === envs.development) {
+      config.reactStrictMode = true;
+    } else if (env === envs.staging) {
+      // add staging custom env vars
+    } else if (env === envs.production) {
+      // add production custom env vars
+    }
+    return config;
+  })()
+);
