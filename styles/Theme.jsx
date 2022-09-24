@@ -44,6 +44,24 @@ const theme = {
       extraLarge: "100px",
     },
   },
+  button: {
+    primary: {
+      colors: {
+        background: "#359b9b",
+        hoverBackground: "#343399",
+        font: "#ffffff",
+        hoverFont: "#ffffff",
+      },
+    },
+    secondary: {
+      colors: {
+        background: "#359b9b",
+        hoverBackground: "#343399",
+        font: "#359b9b",
+        hoverFont: "#ffffff",
+      },
+    },
+  },
 };
 
 const Theme = ({ children }) => (
