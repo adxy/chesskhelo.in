@@ -70,3 +70,10 @@ export const CASTLED_BLACK_KING_QUEEN_SIDE_DESTINATION_ID = "c8";
 // Square Types
 export const SQUARE_TYPE_LIGHT = "l";
 export const SQUARE_TYPE_DARK = "d";
+
+export const AVATAR_SIZES = {
+  small: "small",
+  medium: "medium",
+  large: "large",
+  extraLarge: "extraLarge",
+};
