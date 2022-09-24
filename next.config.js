@@ -18,6 +18,7 @@ module.exports = withBundleAnalyzer(
       env: {
         baseUrl: process.env.BASE_URL,
         apiBase: process.env.API_BASE,
+        googleLoginClientId: process.env.GOOGLE_LOGIN_CLIENT_ID,
       },
     };
     if (env === envs.development) {
