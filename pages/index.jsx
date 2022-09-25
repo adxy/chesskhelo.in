@@ -1,9 +1,13 @@
 import dynamic from "next/dynamic";
 
-const DynamicBoard = dynamic(() => import("../components/Board/Board"), {
+const DynamicHero = dynamic(() => import("../components/Hero"), {
   ssr: false,
 });
 
 export default function Home() {
-  return <DynamicBoard isWhitePlayer={true} isPlayable={true} />;
+  return (
+    <>
+      <DynamicHero />
+    </>
+  );
 }
