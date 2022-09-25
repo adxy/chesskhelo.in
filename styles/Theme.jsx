@@ -22,6 +22,7 @@ const theme = {
   },
   fontWeight: {
     extraLight: "100",
+    light: "200",
     normal: "400",
     semiBold: "600",
     bold: "700",

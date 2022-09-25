@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "apisauce": "^2.1.6",
+    "lottie-web": "^5.9.6",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
