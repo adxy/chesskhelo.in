@@ -170,6 +170,10 @@ var Chess = function (fen) {
     load(fen);
   }
 
+  function getKeyByValue(object, value) {
+    return Object.keys(object).find((key) => object[key] === value);
+  }
+
   function clear(keep_headers) {
     if (typeof keep_headers === "undefined") {
       keep_headers = false;
@@ -1449,7 +1453,12 @@ var Chess = function (fen) {
         if (board[i] == null) {
           row.push(null);
         } else {
-          row.push({ type: board[i].type, color: board[i].color });
+          row.push({
+            square: getKeyByValue(SQUARES, i),
+            type: board[i].type,
+            color: board[i].color,
+            piece: `${board[i].color}${board[i].type}`,
+          });
         }
         if ((i + 1) & 0x88) {
           output.push(row);
