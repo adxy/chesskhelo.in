@@ -37,7 +37,7 @@ export default function SignInWithGoogle() {
       {!userState.loggedIn && (
         <div
           id="g_id_onload"
-          data-client_id="634515321806-7opv59qrekqor7sk9cp6pdajs3fvjlsg.apps.googleusercontent.com"
+          data-client_id={process.env.googleLoginClientId}
           data-context="signin"
           data-ux_mode="popup"
           data-callback="handleCredentialResponse"
