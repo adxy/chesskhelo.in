@@ -1451,7 +1451,7 @@ var Chess = function (fen) {
 
       for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
         if (board[i] == null) {
-          row.push(null);
+          row.push({ square: getKeyByValue(SQUARES, i) });
         } else {
           row.push({
             square: getKeyByValue(SQUARES, i),
