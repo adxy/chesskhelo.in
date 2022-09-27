@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 
 import Square from "./Square";
+import Notations from "./Notations";
+
 import {
   ALPHABETS,
   BLACK_ROOK_KING_SIDE_ID,
@@ -32,28 +34,46 @@ import {
 } from "../../utils/constants";
 import Chess from "../../utils/moveValidation";
 import PawnPromotionDialogue from "./PawnPromotionDialogue";
+import { useSocket } from "../../store/socket";
 
 const BoardContainer = styled.div`
+  position: absolute;
+  top: 0px;
+  right: 0px;
   display: flex;
   overflow: hidden;
   flex-wrap: wrap;
-  width: auto;
-  max-width: 90vh;
-  max-height: 90vh;
   aspect-ratio: 1;
+  max-height: 97%;
+  max-width: 97%;
   border-radius: 6px;
-  resize: vertical;
+`;
+
+const NotationsContainer = styled.div`
+  position: relative;
+  aspect-ratio: 1;
+  height: 100%;
+  width: 100%;
 `;
 
 const OuterBoardContainer = styled.div`
-  position: absolute;
-  align-items: center;
-  justify-contents: center;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  flex-direction: row;
+  height: 70vh;
+  width: auto;
+  max-width: 90vh;
+  max-height: 90vh;
+  resize: vertical;
 `;
 
 const chess = new Chess();
 
 export default function Board({ isWhitePlayer = true, isPlayable = false }) {
+  const [socketState, socketStateActions] = useSocket();
+
+  const socket = socketState.socket;
   let boardProperties = [];
 
   const [showPawnPromotionDialogue, setShowPawnPromotionDialogue] =
@@ -325,23 +345,26 @@ export default function Board({ isWhitePlayer = true, isPlayable = false }) {
 
   return (
     <OuterBoardContainer>
-      {showPawnPromotionDialogue && (
-        <PawnPromotionDialogue
-          playerColor={chess.turn()}
-          onClick={handlePawnPromotionPieceSelection}
-          onClickClose={handleCloseButtonPress}
-        />
-      )}
-      <BoardContainer id={CHESS_BOARD_ID}>
-        {boardProperties.map((value) => (
-          <Square
-            key={value.id}
-            id={value.id}
-            type={value.type}
-            piece={value.piece}
-          />
-        ))}
-      </BoardContainer>
+      <NotationsContainer>
+        <Notations isWhitePlayer={isWhitePlayer} />
+        <BoardContainer id={CHESS_BOARD_ID}>
+          {boardProperties.map((value) => (
+            <Square
+              key={value.id}
+              id={value.id}
+              type={value.type}
+              piece={value.piece}
+            />
+          ))}
+          {showPawnPromotionDialogue && (
+            <PawnPromotionDialogue
+              playerColor={chess.turn()}
+              onClick={handlePawnPromotionPieceSelection}
+              onClickClose={handleCloseButtonPress}
+            />
+          )}
+        </BoardContainer>
+      </NotationsContainer>
     </OuterBoardContainer>
   );
 }
