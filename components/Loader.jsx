@@ -23,6 +23,6 @@ const LoaderContainer = styled.div`
   border-radius: 50%;
 `;
 
-export default function Loader({ size }) {
+export default function Loader({ size = "30px" }) {
   return <LoaderContainer size={size} />;
 }
