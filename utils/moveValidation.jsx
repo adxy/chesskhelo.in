@@ -139,6 +139,30 @@ var Chess = function (fen) {
       a1: 112, b1: 113, c1: 114, d1: 115, e1: 116, f1: 117, g1: 118, h1: 119
     };
 
+  // prettier-ignore
+  const SQUARES_REVERSED = {
+      0:   "a8",     1:  "b8",   2:  "c8",    3:   "d8",    4:   "e8",     5:  "f8",     6:  "g8",     7: "h8",
+      16:  "a7",    17:  "b7",  18:  "c7",    19:  "d7",    20:  "e7",    21:  "f7",    22:  "g7",     23: "h7",
+      32:  "a6",    33:  "b6",  34:  "c6",    35:  "d6",    36:  "e6",    37:  "f6",    38:  "g6",     39: "h6",
+      48:  "a5",    49:  "b5",  50:  "c5",    51:  "d5",    52:  "e5",    53:  "f5",    54:  "g5",     55: "h5",
+      64:  "a4",    65:  "b4",  66:  "c4",    67:  "d4",    68:  "e4",    69:  "f4",    70:  "g4",     71: "h4",
+      80:  "a3",    81:  "b3",  82:  "c3",    83:  "d3",    84:  "e3",    85:  "f3",    86:  "g3",     87: "h3",
+      96:  "a2",    97:  "b2",  98:  "c2",    99:  "d2",   100:  "e2",    101:  "f2",    102:  "g2",     103: "h2",
+     112: "a1",    113:  "b1",  114: "c1",    115: "d1",   116:  "e1",    117:  "f1",    118:  "g1",     119: "h1",
+  };
+
+  // prettier-ignore
+  var SQUARES_COLORS = {
+    a8:  "l", b8:  "d", c8:  "l", d8:  "d", e8:  "l", f8:  "d", g8:  "l", h8:  "d",
+    a7:  "d", b7:  "l", c7:  "d", d7:  "l", e7:  "d", f7:  "l", g7:  "d", h7:  "l",
+    a6:  "l", b6:  "d", c6:  "l", d6:  "d", e6:  "l", f6:  "d", g6:  "l", h6:  "d",
+    a5:  "d", b5:  "l", c5:  "d", d5:  "l", e5:  "d", f5:  "l", g5:  "d", h5:  "l",
+    a4:  "l", b4:  "d", c4:  "l", d4:  "d", e4:  "l", f4:  "d", g4:  "l", h4:  "d",
+    a3:  "d", b3:  "l", c3:  "d", d3:  "l", e3:  "d", f3:  "l", g3:  "d", h3:  "l",
+    a2:  "l", b2:  "d", c2:  "l", d2:  "d", e2:  "l", f2:  "d", g2:  "l", h2:  "d",
+    a1:  "d", b1:  "l", c1:  "d", d1:  "l", e1:  "d", f1:  "l", g1:  "d", h1:  "l"
+  };
+
   var ROOKS = {
     w: [
       { square: SQUARES.a1, flag: BITS.QSIDE_CASTLE },
@@ -1462,6 +1486,34 @@ var Chess = function (fen) {
         }
         if ((i + 1) & 0x88) {
           output.push(row);
+          row = [];
+          i += 8;
+        }
+      }
+
+      return output;
+    },
+
+    boardProperties: function () {
+      var output = [],
+        row = [];
+
+      for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+        if (board[i] == null) {
+          row.push({
+            id: SQUARES_REVERSED[i],
+            squareType: SQUARES_COLORS[SQUARES_REVERSED[i]],
+            piece: null,
+          });
+        } else {
+          row.push({
+            id: SQUARES_REVERSED[i],
+            squareType: SQUARES_COLORS[SQUARES_REVERSED[i]],
+            piece: `${board[i].color}${board[i].type}`,
+          });
+        }
+        if ((i + 1) & 0x88) {
+          row.map((element) => output.push(element));
           row = [];
           i += 8;
         }
