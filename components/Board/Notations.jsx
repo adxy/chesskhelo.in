@@ -6,6 +6,7 @@ const NotationsContainer = styled.svg`
   left: 0;
   width: 100%;
   height: 100%;
+  font-size: 2.5px;
 `;
 
 const properties = [
@@ -27,11 +28,11 @@ const properties = [
   { x: "93.9375", y: "99.5", white: "h", black: "a" },
 ];
 
-export default function Notations({ fontSize, isWhitePlayer }) {
+export default function Notations({ isWhitePlayer }) {
   return (
     <NotationsContainer viewBox="0 0 100 100">
       {properties.map((row) => (
-        <text x={row.x} y={row.y} font-size={fontSize || "2.2"}>
+        <text key={row.x + row.y} x={row.x} y={row.y}>
           {isWhitePlayer ? row.white : row.black}
         </text>
       ))}
