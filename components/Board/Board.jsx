@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 
 import Square from "./Square";
 import Notations from "./Notations";
-
 import {
-  ALPHABETS,
   BLACK_ROOK_KING_SIDE_ID,
   BLACK_ROOK_QUEEN_SIDE_ID,
   CASTLED_BLACK_ROOK_KING_SIDE_DESTINATION_ID,
@@ -15,10 +13,7 @@ import {
   CHESS_BOARD_ID,
   KING_SIDE_CASTLING,
   MOVE_COLOR_WHITE,
-  PIECE_DEFAULT_POSITION_LIST,
   QUEEN_SIDE_CASTLING,
-  SQUARE_TYPE_DARK,
-  SQUARE_TYPE_LIGHT,
   STANDARD_CAPTURE,
   WHITE_ROOK_QUEEN_SIDE_ID,
   WHITE_ROOK_KING_SIDE_ID,
@@ -35,6 +30,7 @@ import {
 import Chess from "../../utils/moveValidation";
 import PawnPromotionDialogue from "./PawnPromotionDialogue";
 import { useSocket } from "../../store/socket";
+import Loader from "../Loader";
 
 const BoardContainer = styled.div`
   position: absolute;
@@ -62,7 +58,9 @@ const OuterBoardContainer = styled.div`
   overflow: hidden;
   flex-direction: row;
   height: 70vh;
-  width: auto;
+  aspect-ratio: 1;
+  min-height: 200px;
+  min-width: 200px;
   max-width: 90vh;
   max-height: 90vh;
   resize: vertical;
@@ -70,11 +68,14 @@ const OuterBoardContainer = styled.div`
 
 const chess = new Chess();
 
-export default function Board({ isWhitePlayer = true, isPlayable = false }) {
+export default function Board({
+  isWhitePlayer = true,
+  isPlayable = false,
+  allowBothSideMoves = false,
+}) {
   const [socketState, socketStateActions] = useSocket();
 
   const socket = socketState.socket;
-  let boardProperties = [];
 
   const [showPawnPromotionDialogue, setShowPawnPromotionDialogue] =
     useState(false);
@@ -83,6 +84,20 @@ export default function Board({ isWhitePlayer = true, isPlayable = false }) {
     to: "",
   });
   const [piecesPromotedCount, setPiecesPromotedCount] = useState(0);
+  const [boardState, setBoardState] = useState(undefined);
+
+  useEffect(() => {
+    // fetch board state from backend here, or init default
+    setTimeout(() => {
+      chess.load("rnbqkbnr/ppp1pppp/8/8/8/2NP4/PPPB2pP/R2QKBNR b KQkq - 0 1");
+
+      setBoardState(
+        isWhitePlayer
+          ? chess.boardProperties()
+          : chess.boardProperties().reverse()
+      );
+    }, [1000]);
+  }, []);
 
   const isPromotion = ({ from, to }) => {
     const piece = chess.get(from);
@@ -258,7 +273,14 @@ export default function Board({ isWhitePlayer = true, isPlayable = false }) {
 
   if (isPlayable) {
     useEffect(() => {
-      const pieces = document.querySelectorAll(".piece");
+      let pieces;
+      if (allowBothSideMoves) {
+        pieces = document.querySelectorAll(".piece");
+      } else {
+        pieces = document.querySelectorAll(
+          isWhitePlayer ? ".piece-w" : ".piece-b"
+        );
+      }
 
       pieces.forEach((piece) => piece.addEventListener("dragstart", dragStart));
       pieces.forEach((piece) => piece.addEventListener("dragend", dragEnd));
@@ -271,7 +293,7 @@ export default function Board({ isWhitePlayer = true, isPlayable = false }) {
         square.addEventListener("dragleave", dragLeave);
         square.addEventListener("drop", drop);
       });
-    }, []);
+    }, [boardState]);
   }
 
   const dragStart = (e) => {
@@ -323,37 +345,19 @@ export default function Board({ isWhitePlayer = true, isPlayable = false }) {
     makeMove({ from: draggedPiece.parentElement.id, to: dropSquareId });
   };
 
-  for (let i = 8; i > 0; i -= 1) {
-    for (let j = 8; j > 0; j -= 1) {
-      boardProperties.push({
-        type: (i + j) % 2 === 0 ? SQUARE_TYPE_LIGHT : SQUARE_TYPE_DARK,
-        id: `${ALPHABETS[ALPHABETS.length - j]}${i}`,
-        piece: Object.keys(PIECE_DEFAULT_POSITION_LIST).includes(
-          `${ALPHABETS[ALPHABETS.length - j]}${i}`
-        )
-          ? PIECE_DEFAULT_POSITION_LIST[
-              `${ALPHABETS[ALPHABETS.length - j]}${i}`
-            ]
-          : false,
-      });
-    }
-  }
-
-  if (!isWhitePlayer) {
-    boardProperties = boardProperties.reverse();
-  }
-
-  return (
+  return boardState ? (
     <OuterBoardContainer>
       <NotationsContainer>
         <Notations isWhitePlayer={isWhitePlayer} />
         <BoardContainer id={CHESS_BOARD_ID}>
-          {boardProperties.map((value) => (
+          {boardState.map((value) => (
             <Square
               key={value.id}
               id={value.id}
-              type={value.type}
+              squareType={value.squareType}
               piece={value.piece}
+              allowBothSidesMove={allowBothSideMoves}
+              isWhitePlayer={isWhitePlayer}
             />
           ))}
           {showPawnPromotionDialogue && (
@@ -365,6 +369,15 @@ export default function Board({ isWhitePlayer = true, isPlayable = false }) {
           )}
         </BoardContainer>
       </NotationsContainer>
+    </OuterBoardContainer>
+  ) : (
+    <OuterBoardContainer
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Loader size="30px" />
     </OuterBoardContainer>
   );
 }
