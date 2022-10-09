@@ -11,6 +11,7 @@ const theme = {
       green: "#359b9b",
       pink: "#fe78ab",
     },
+    notationsGray: "#808080",
   },
   fontSize: {
     extraSmall: "0.5rem",

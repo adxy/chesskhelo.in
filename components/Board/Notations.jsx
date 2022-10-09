@@ -2,11 +2,13 @@ import styled from "styled-components";
 
 const NotationsContainer = styled.svg`
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1;
   font-size: 2.5px;
+  font-weight: ${({ theme }) => theme.fontWeight.semiBold};
+  fill: ${({ theme }) => theme.colors.notationsGray};
 `;
 
 const properties = [
