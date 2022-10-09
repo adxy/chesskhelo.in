@@ -5,14 +5,14 @@ import GlobalStyle from "../styles/GlobalStyles";
 import Theme from "../styles/Theme";
 import { useAccessTokenState } from "../store/accessToken";
 import { useUserState } from "../store/user";
-import { useSocket } from "../store/socket";
+import { useSocketState } from "../store/socket";
 import { setTokenHeader, get } from "../utils/networkUtils";
 import Layout from "../components/Layout/Layout";
 
 function MyApp({ Component, pageProps }) {
   const [userState, userStateActions] = useUserState();
   const [accessTokenState, accessTokenStateActions] = useAccessTokenState();
-  const [socketState, socketStateActions] = useSocket();
+  const [socketState, socketStateActions] = useSocketState();
 
   const updateAccessToken = async () => {
     const response = await get({

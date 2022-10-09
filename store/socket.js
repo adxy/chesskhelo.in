@@ -35,4 +35,4 @@ const Store = createStore({
   name: "sockets",
 });
 
-export const useSocket = createHook(Store);
+export const useSocketState = createHook(Store);
