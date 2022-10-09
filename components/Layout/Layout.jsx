@@ -14,16 +14,22 @@ const LayoutContainer = styled.div`
   align-items: center;
   width: 100%;
   padding: 1em 0;
+  min-height: 70vh;
+  margin-top: ${({ theme }) => theme.layout.spaces.large};
+`;
+
+const MainLayout = styled.div`
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 class Layout extends Component {
   render() {
     return (
-      <div>
+      <MainLayout>
         <DynamicHeader />
         <LayoutContainer>{this.props.children}</LayoutContainer>
         <Footer />
-      </div>
+      </MainLayout>
     );
   }
 }
