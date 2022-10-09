@@ -4,6 +4,7 @@ const theme = {
   colors: {
     white: "#ffffff",
     black: "#000000",
+    background: "#fffafa",
     primary: {
       yellow: "#f0bf00",
       blue: "#343399",
@@ -36,6 +37,7 @@ const theme = {
       large: "16px",
       extraLarge: "32px",
     },
+    standardBorderRadius: "6px",
   },
   avatar: {
     size: {
