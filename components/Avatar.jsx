@@ -64,14 +64,10 @@ export default function RoundThumbnail({
           <ImgSquare
             src={src}
             thumbnailSize={thumbnailSize}
-            alt={`${userName} avatar`}
+            alt={`user avatar`}
           />
         ) : (
-          <Img
-            src={src}
-            thumbnailSize={thumbnailSize}
-            alt={`${userName} avatar`}
-          />
+          <Img src={src} thumbnailSize={thumbnailSize} alt={`user avatar`} />
         )
       ) : (
         <NoImg thumbnailSize={thumbnailSize}>
