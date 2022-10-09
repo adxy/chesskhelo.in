@@ -12,7 +12,6 @@ const HeroContainer = styled.div`
   align-items: center;
   height: auto;
   width: calc(100% - 64px);
-  background-color: white;
 `;
 
 const HeroTextContainer = styled.div`
