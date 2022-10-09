@@ -15,6 +15,16 @@ const SquareBox = styled.div`
 const Piece = styled.img`
   height: 100%;
   width: 100%;
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+
+  &:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+  }
 `;
 
 const getDraggable = ({ isWhitePlayer, allowBothSidesMove, piece }) => {
