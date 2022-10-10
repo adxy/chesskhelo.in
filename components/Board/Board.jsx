@@ -29,7 +29,6 @@ import {
 } from "../../utils/constants";
 import Chess from "../../utils/moveValidation";
 import PawnPromotionDialogue from "./PawnPromotionDialogue";
-import { useSocketState } from "../../store/socket";
 import { useChessState } from "../../store/chess";
 import Loader from "../Loader";
 
@@ -74,6 +73,7 @@ const chess = new Chess();
 export default function Board({
   isWhitePlayer = true,
   isPlayable = false,
+  isMultiplayer = false,
   allowBothSideMoves = false,
   fen = undefined,
   pgn = undefined,

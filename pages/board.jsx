@@ -79,13 +79,12 @@ export default function Play() {
 
   return (
     <MainContainer>
-      {userState.loggedIn && (
-        <DynamicBoard
-          isWhitePlayer={true}
-          isPlayable={true}
-          allowBothSideMoves={true}
-        />
-      )}
+      <DynamicBoard
+        isWhitePlayer={true}
+        isPlayable={true}
+        allowBothSideMoves={true}
+      />
+
       <Margin />
       <SideContainer>
         <PgnContainer />
