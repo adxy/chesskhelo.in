@@ -27,10 +27,16 @@ import {
   CAPTURE_PROMOTION,
   EN_PASSANT_CAPTURE,
 } from "../../utils/constants";
-import Chess from "../../utils/moveValidation";
 import PawnPromotionDialogue from "./PawnPromotionDialogue";
 import { useChessState } from "../../store/chess";
 import Loader from "../Loader";
+import {
+  moveSelfAudio,
+  captureAudio,
+  castleAudio,
+  promoteAudio,
+  gameStartAudio,
+} from "../../utils/audio";
 
 const BoardContainer = styled.div`
   position: absolute;
@@ -101,6 +107,7 @@ export default function Board({
           ? chessState.chess.boardProperties()
           : chessState.chess.boardProperties().reverse()
       );
+      gameStartAudio.play();
     }, [0]);
   }, []);
 
@@ -143,17 +150,20 @@ export default function Board({
 
       switch (move.flags) {
         case STANDARD_CAPTURE:
+          captureAudio.play();
           destinationSquare.removeChild(destinationPiece);
           destinationSquare.appendChild(draggedPiece);
           break;
 
         case KING_SIDE_CASTLING:
+          castleAudio.play();
           handleCastling({
             moveColor: move.color,
           });
           break;
 
         case QUEEN_SIDE_CASTLING:
+          castleAudio.play();
           handleCastling({
             moveColor: move.color,
             kingSide: false,
@@ -161,6 +171,7 @@ export default function Board({
           break;
 
         case NON_CAPTURE_PROMOTION:
+          promoteAudio.play();
           handlePawnPromotion({
             draggedPiece,
             color: move.color,
@@ -170,6 +181,7 @@ export default function Board({
           break;
 
         case CAPTURE_PROMOTION:
+          promoteAudio.play();
           handlePawnPromotion({
             draggedPiece,
             color: move.color,
@@ -180,6 +192,7 @@ export default function Board({
           break;
 
         case EN_PASSANT_CAPTURE:
+          captureAudio.play();
           const capturedSquare = document.getElementById(
             String(move.to[0] + move.from[1])
           );
@@ -188,6 +201,7 @@ export default function Board({
           break;
 
         default:
+          moveSelfAudio.play();
           destinationSquare.appendChild(draggedPiece);
       }
     }
