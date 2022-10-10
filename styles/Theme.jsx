@@ -5,6 +5,8 @@ const theme = {
     white: "#ffffff",
     black: "#000000",
     background: "#fffafa",
+    standardSquareLight: "#E9E5D6",
+    standardSquareDark: "#362706",
     primary: {
       yellow: "#f0bf00",
       blue: "#343399",

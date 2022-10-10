@@ -6,8 +6,10 @@ const SquareBox = styled.div`
   justify-content: center;
   width: 12.5%;
   height: 12.5%;
-  background-color: ${({ squareType }) =>
-    squareType === "l" ? "#E9E5D6" : "#362706"};
+  background-color: ${({ squareType, theme }) =>
+    squareType === "l"
+      ? theme.colors.standardSquareLight
+      : theme.colors.standardSquareDark};
   overflow: hidden;
   box-sizing: border-box;
 `;
