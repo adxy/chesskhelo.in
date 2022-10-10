@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { useUserState } from "../store/user";
 import Avatar from "../components/Avatar";
-import Button from "./Button";
+import Button from "./Buttons/Button";
 
 const ProfileDialogueContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.white};

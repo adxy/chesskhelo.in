@@ -3,7 +3,7 @@ import lottie from "lottie-web";
 import { useEffect } from "react";
 
 import headerAnimationData from "../public/lotties/header-animation.json";
-import Button from "./Button";
+import Button from "./Buttons/Button";
 import { BREAK_POINTS } from "../styles/Responsive";
 
 const HeroContainer = styled.div`
