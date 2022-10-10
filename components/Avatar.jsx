@@ -65,14 +65,14 @@ export default function RoundThumbnail({
             src={src}
             thumbnailSize={thumbnailSize}
             alt={`user avatar`}
-            referrerpolicy="no-referrer"
+            referrerPolicy="no-referrer"
           />
         ) : (
           <Img
             src={src}
             thumbnailSize={thumbnailSize}
             alt={`user avatar`}
-            referrerpolicy="no-referrer"
+            referrerPolicy="no-referrer"
           />
         )
       ) : (
