@@ -142,7 +142,7 @@ export default function Board() {
     {
       onClick: () => copyToClipboard("fen"),
       src: "/icons/copy-icon.svg",
-      text: "Copy Fen",
+      text: "Copy FEN",
     },
     {
       onClick: () => copyToClipboard("pgn"),
