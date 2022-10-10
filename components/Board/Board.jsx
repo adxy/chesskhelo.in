@@ -73,7 +73,6 @@ const chess = new Chess();
 export default function Board({
   isWhitePlayer = true,
   isPlayable = false,
-  isMultiplayer = false,
   allowBothSideMoves = false,
   fen = undefined,
   pgn = undefined,
@@ -143,10 +142,6 @@ export default function Board({
       const draggedPiece = document.getElementById(from).firstChild;
       const destinationPiece = document.getElementById(to).firstChild;
       destinationSquare.classList.remove("drag-over");
-
-      if (true) {
-        setBoardState(chessState.chess.boardProperties().reverse());
-      }
 
       switch (move.flags) {
         case STANDARD_CAPTURE:
