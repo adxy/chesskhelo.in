@@ -137,7 +137,7 @@ export default function Board({
     chessStateActions.setChess(chessState.chess);
 
     if (move) {
-      chessStateActions.setMoves(chess.history());
+      chessStateActions.setMoves(chessState.chess.history());
       const destinationSquare = document.getElementById(to);
       const draggedPiece = document.getElementById(from).firstChild;
       const destinationPiece = document.getElementById(to).firstChild;
