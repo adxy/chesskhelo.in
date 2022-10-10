@@ -92,7 +92,8 @@ export default function Pgn() {
   return (
     <PgnContainer>
       <Margin />
-      {moves &&
+      {chessState.moves &&
+        moves &&
         moves.map((element) => (
           <MoveContainer key={element}>
             <MoveNumber>{element[0]}</MoveNumber>

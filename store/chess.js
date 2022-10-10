@@ -21,6 +21,12 @@ const Store = createStore({
           moves: moves,
         });
       },
+
+    resetChess:
+      () =>
+      ({ setState }) => {
+        setState({ chess: new Chess(), moves: [] });
+      },
   },
   // optional, mostly used for easy debugging
   name: "chess",
