@@ -93,28 +93,28 @@ export default function Board({
     // fetch board state from backend here, or init default
     setTimeout(() => {
       if (fen) {
-        chess.load(fen);
+        chessStateActions.setChess(chessState.chess.load(fen));
       }
       if (pgn) {
-        chess.load_pgn(pgn);
+        chessStateActions.setChess(chessState.chess.load_pgn(pgn));
       }
       chessStateActions.setMoves(chess.history());
       setBoardState(
         isWhitePlayer
-          ? chess.boardProperties()
-          : chess.boardProperties().reverse()
+          ? chessState.chess.boardProperties()
+          : chessState.chess.boardProperties().reverse()
       );
     }, [1000]);
   }, []);
 
   const isPromotion = ({ from, to }) => {
-    const piece = chess.get(from);
+    const piece = chessState.chess.get(from);
 
     if (piece?.type !== "p") {
       return false;
     }
 
-    if (piece.color !== chess.turn()) {
+    if (piece.color !== chessState.chess.turn()) {
       return false;
     }
 
@@ -122,7 +122,7 @@ export default function Board({
       return false;
     }
 
-    return chess
+    return chessState.chess
       .moves({ square: from, verbose: true })
       .map((move) => move.to)
       .includes(to);
@@ -134,7 +134,8 @@ export default function Board({
       moveObject.promotion = promotion;
     }
 
-    const move = chess.move(moveObject);
+    const move = chessState.chess.move(moveObject);
+    chessStateActions.setChess(chessState.chess);
 
     if (move) {
       chessStateActions.setMoves(chess.history());
@@ -142,6 +143,10 @@ export default function Board({
       const draggedPiece = document.getElementById(from).firstChild;
       const destinationPiece = document.getElementById(to).firstChild;
       destinationSquare.classList.remove("drag-over");
+
+      if (true) {
+        setBoardState(chessState.chess.boardProperties().reverse());
+      }
 
       switch (move.flags) {
         case STANDARD_CAPTURE:
@@ -371,7 +376,7 @@ export default function Board({
           ))}
           {showPawnPromotionDialogue && (
             <PawnPromotionDialogue
-              playerColor={chess.turn()}
+              playerColor={chessState.chess.turn()}
               onClick={handlePawnPromotionPieceSelection}
               onClickClose={handleCloseButtonPress}
             />
