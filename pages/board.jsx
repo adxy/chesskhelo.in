@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
 import styled from "styled-components";
 
-import { useUserState } from "../store/user";
-import { useChessState } from "../store/chess";
 import { BREAK_POINTS } from "../styles/Responsive";
 import PgnContainer from "../components/PgnContainer";
 
@@ -58,25 +56,7 @@ const Margin = styled.div`
   margin: ${({ theme }) => theme.layout.spaces.large};
 `;
 
-export default function Play() {
-  const [userState, _] = useUserState();
-  const [chessState, chessStateActions] = useChessState();
-
-  const getMoves = () => {
-    let moves = chessState.moves;
-    let tempMoves = [];
-    for (let i = 0; i < moves.length; i += 2) {
-      if (i + 2 <= moves.length) {
-        tempMoves.push([`${i / 2 + 1}.`, moves[i], moves[i + 1]]);
-      } else {
-        tempMoves.push([`${i / 2 + 1}.`, moves[i]]);
-      }
-    }
-    return tempMoves;
-  };
-
-  const moves = getMoves();
-
+export default function Board() {
   return (
     <MainContainer>
       <DynamicBoard
@@ -84,7 +64,6 @@ export default function Play() {
         isPlayable={true}
         allowBothSideMoves={true}
       />
-
       <Margin />
       <SideContainer>
         <PgnContainer />
