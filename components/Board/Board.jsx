@@ -29,7 +29,8 @@ import {
 } from "../../utils/constants";
 import Chess from "../../utils/moveValidation";
 import PawnPromotionDialogue from "./PawnPromotionDialogue";
-import { useSocket } from "../../store/socket";
+import { useSocketState } from "../../store/socket";
+import { useChessState } from "../../store/chess";
 import Loader from "../Loader";
 
 const BoardContainer = styled.div`
@@ -42,28 +43,30 @@ const BoardContainer = styled.div`
   aspect-ratio: 1;
   max-height: 97%;
   max-width: 97%;
-  border-radius: 6px;
+  border-radius: ${({ theme }) => theme.layout.standardBorderRadius};
 `;
 
 const NotationsContainer = styled.div`
   position: relative;
   aspect-ratio: 1;
-  height: 100%;
+  top: 0px;
+  right: 0px;
   width: 100%;
 `;
 
 const OuterBoardContainer = styled.div`
+  position: relative;
   display: flex;
   position: relative;
   overflow: hidden;
   flex-direction: row;
-  height: 70vh;
+  width: calc(100% - 16px);
   aspect-ratio: 1;
   min-height: 200px;
   min-width: 200px;
   max-width: 90vh;
   max-height: 90vh;
-  resize: vertical;
+  resize: horizontal;
 `;
 
 const chess = new Chess();
@@ -72,10 +75,10 @@ export default function Board({
   isWhitePlayer = true,
   isPlayable = false,
   allowBothSideMoves = false,
+  fen = undefined,
+  pgn = undefined,
 }) {
-  const [socketState, socketStateActions] = useSocket();
-
-  const socket = socketState.socket;
+  const [chessState, chessStateActions] = useChessState();
 
   const [showPawnPromotionDialogue, setShowPawnPromotionDialogue] =
     useState(false);
@@ -89,8 +92,13 @@ export default function Board({
   useEffect(() => {
     // fetch board state from backend here, or init default
     setTimeout(() => {
-      chess.load("rnbqkbnr/ppp1pppp/8/8/8/2NP4/PPPB2pP/R2QKBNR b KQkq - 0 1");
-
+      if (fen) {
+        chess.load(fen);
+      }
+      if (pgn) {
+        chess.load_pgn(pgn);
+      }
+      chessStateActions.setMoves(chess.history());
       setBoardState(
         isWhitePlayer
           ? chess.boardProperties()
@@ -129,6 +137,7 @@ export default function Board({
     const move = chess.move(moveObject);
 
     if (move) {
+      chessStateActions.setMoves(chess.history());
       const destinationSquare = document.getElementById(to);
       const draggedPiece = document.getElementById(from).firstChild;
       const destinationPiece = document.getElementById(to).firstChild;

@@ -25,4 +25,4 @@ const Store = createStore({
   name: "loggedIn",
 });
 
-export const useLoggedIn = createHook(Store);
+export const useLoggedInState = createHook(Store);
