@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import lottie from "lottie-web";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 import headerAnimationData from "../public/lotties/header-animation.json";
 import Button from "./Buttons/Button";
 import { BREAK_POINTS } from "../styles/Responsive";
+import { useUserState } from "../store/user";
 
 const HeroContainer = styled.div`
   display: flex;
@@ -72,6 +74,10 @@ const Margin = styled.div`
 `;
 
 export default function Hero() {
+  const router = useRouter();
+
+  const [userState, _] = useUserState();
+
   useEffect(() => {
     lottie.loadAnimation({
       container: document.getElementById("header-animation"),
@@ -100,9 +106,19 @@ export default function Hero() {
           <SubText>SignIn to play with your friends!</SubText>
           <Margin />
           <ButtonContainer>
-            <Button title="Play vs Computer" />
+            <Button
+              title="Just load a Board!"
+              onPress={() => router.push("/board")}
+            />
             <Margin />
-            <Button title={"SignIn for Multiplayer"} buttonType="secondary" />
+            <Button
+              title={
+                userState.loggedIn
+                  ? "Create a challenge!"
+                  : "SignIn for Multiplayer"
+              }
+              buttonType="secondary"
+            />
           </ButtonContainer>
         </HeroTextContainer>
         <HeroAnimationContainer
