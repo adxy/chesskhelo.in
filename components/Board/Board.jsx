@@ -68,8 +68,6 @@ const OuterBoardContainer = styled.div`
   resize: horizontal;
 `;
 
-const chess = new Chess();
-
 export default function Board({
   isWhitePlayer = true,
   isPlayable = false,
@@ -97,13 +95,13 @@ export default function Board({
       if (pgn) {
         chessStateActions.setChess(chessState.chess.load_pgn(pgn));
       }
-      chessStateActions.setMoves(chess.history());
+      chessStateActions.setMoves(chessState.chess.history());
       setBoardState(
         isWhitePlayer
           ? chessState.chess.boardProperties()
           : chessState.chess.boardProperties().reverse()
       );
-    }, [1000]);
+    }, [0]);
   }, []);
 
   const isPromotion = ({ from, to }) => {
