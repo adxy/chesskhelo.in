@@ -1,5 +1,7 @@
 ## Getting Started
 
+![chesskhelo.in banner](/public/miscellaneous/chesskhelo-readme-banner.jpg?raw=true "chesskhelo.in banner")
+
 First, run the development server:
 
 ```bash
