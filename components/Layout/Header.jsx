@@ -7,7 +7,7 @@ import Avatar from "../Avatar";
 import { useAccessTokenState } from "../../store/accessToken";
 import { useUserState } from "../../store/user";
 import { del } from "../../utils/networkUtils";
-import ProfileDialogue from "../ProfileDialogue";
+import ProfileDialogue from "../Dialogs/Profile";
 
 const DynamicSignInWithGoogle = dynamic(() => import("../SignInWithGoogle"));
 
