@@ -57,7 +57,7 @@ export default function ProfileDialogue({ handleLogOut, onClickClose }) {
 
   return userState.loggedIn ? (
     <ProfileDialogueContainer>
-      <DialogCloseButton onClick={onClickClose} />
+      <DialogCloseButton onClick={onClickClose} color="white" />
       <ProfileBackground />
       <AvatarContainer>
         <Avatar

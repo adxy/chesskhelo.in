@@ -23,10 +23,12 @@ const CloseButton = styled.img`
   z-index: 15;
 `;
 
-export default function DialogCloseButton({ onClick }) {
+export default function DialogCloseButton({ onClick, color = "white" }) {
   return (
     <CloseButtonContainer onClick={onClick}>
-      <CloseButton src="/icons/close-icon-white.svg" />
+      <CloseButton
+        src={`/icons/close-icon-${color === "white" ? "white" : "black"}.svg`}
+      />
     </CloseButtonContainer>
   );
 }
