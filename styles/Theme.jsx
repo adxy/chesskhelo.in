@@ -53,6 +53,10 @@ const theme = {
   button: {
     primary: {
       colors: {
+        backgroundDisabled: "rgba(53, 155, 155, 0.3)",
+        hoverDisabled: "rgba(52, 51, 153, 0.3)",
+        fontDisabled: "#ffffff",
+        hoverFontDisabled: "rgba(255, 255, 255, 0.3)",
         background: "#359b9b",
         hoverBackground: "#343399",
         font: "#ffffff",
@@ -61,7 +65,11 @@ const theme = {
     },
     secondary: {
       colors: {
+        backgroundDisabled: "rgba(53, 155, 155, 0.3)",
+        fontDisabled: "rgba(53, 155, 155, 0.3)",
+        hoverFontDisabled: "rgba(53, 155, 155, 0.3)",
         background: "#359b9b",
+        backgroundHover: "#ffffff",
         hoverBackground: "#343399",
         font: "#359b9b",
         hoverFont: "#ffffff",
