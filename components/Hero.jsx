@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import lottie from "lottie-web";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import headerAnimationData from "../public/lotties/header-animation.json";
 import Button from "./Buttons/Button";
 import { BREAK_POINTS } from "../styles/Responsive";
 import { useUserState } from "../store/user";
+import CreateChallengeDialog from "./Dialogs/CreateChallenge";
 
 const HeroContainer = styled.div`
   display: flex;
@@ -76,6 +77,8 @@ const Margin = styled.div`
 export default function Hero() {
   const router = useRouter();
 
+  const [showCreateChallengeDialog, setShowCreateChallengeDialog] =
+    useState(false);
   const [userState, _] = useUserState();
 
   useEffect(() => {
@@ -94,16 +97,23 @@ export default function Hero() {
       animationData: headerAnimationData,
     });
   }, []);
+
+  const toggleCreateChallengeDialog = () =>
+    setShowCreateChallengeDialog((current) => !current);
+
   return (
     <>
       <HeroContainer>
+        {showCreateChallengeDialog && (
+          <CreateChallengeDialog onClickClose={toggleCreateChallengeDialog} />
+        )}
         <HeroTextContainer>
           <HeroAnimationContainer
             id="header-animation-mob"
             className="visible-mobile"
           />
           Welcome to <b>ChessKhelo!</b>
-          <SubText>SignIn to play with your friends!</SubText>
+          <SubText>Made for the ❤️ of Chess!</SubText>
           <Margin />
           <ButtonContainer>
             <Button
@@ -118,6 +128,8 @@ export default function Hero() {
                   : "SignIn for Multiplayer"
               }
               buttonType="secondary"
+              onPress={toggleCreateChallengeDialog}
+              disabled={userState.loggedIn ? false : true}
             />
           </ButtonContainer>
         </HeroTextContainer>
