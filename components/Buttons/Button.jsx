@@ -69,7 +69,7 @@ const ButtonWrap = styled.button`
     })};
   margin: 0px;
   padding: 10px;
-  width: auto;
+  width: max-content;
   flex-direction: row;
   justify-content: center;
   align-items: center;
