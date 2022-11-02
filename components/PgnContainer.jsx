@@ -25,7 +25,7 @@ const PgnContainer = styled.div`
 `;
 
 const Margin = styled.div`
-  margin: ${({ theme }) => theme.layout.spaces.large};
+  margin: ${({ theme }) => theme.layout.spaces.medium};
 `;
 
 const MoveContainer = styled.div`
