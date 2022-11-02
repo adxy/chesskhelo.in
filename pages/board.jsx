@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { BREAK_POINTS } from "../styles/Responsive";
 import PgnContainer from "../components/PgnContainer";
+import FenContainer from "../components/FenContainer";
 import { useChessState } from "../store/chess";
 
 const DynamicBoard = dynamic(() => import("../components/Board/Board"), {
@@ -30,7 +31,7 @@ const MainContainer = styled.div`
 `;
 
 const SideContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.primary.green};
   height: 90vh;
   width: 100%;
   min-width: 200px;
@@ -52,16 +53,6 @@ const SideContainer = styled.div`
     max-height: 700px;
     margin-left: 20px;
   `};
-`;
-
-const FenContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.primary.green};
-  width: 100%;
-  height: auto;
-  font-size: 13px;
 `;
 
 const SidebarHeader = styled.div`
@@ -86,26 +77,13 @@ const SidebarHeaderButton = styled.div`
   color: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.layout.standardBorderRadius};
 
+  p {
+    margin: ${({ theme }) => theme.layout.spaces.extraSmall} 0 0;
+  }
+
   :hover {
     background-color: ${({ theme }) => theme.colors.primary.pink};
   }
-`;
-
-const FenTitle = styled.div`
-  padding: ${({ theme }) => theme.layout.spaces.extraSmall};
-  font-weight: ${({ theme }) => theme.fontWeight.bold};
-  margin-bottom: ${({ theme }) => theme.layout.spaces.extraSmall};
-`;
-
-const Fen = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.white};
-  min-width: 90%;
-  padding: ${({ theme }) => theme.layout.spaces.extraSmall};
-  border-radius: ${({ theme }) => theme.layout.standardBorderRadius};
-  margin-bottom: ${({ theme }) => theme.layout.spaces.extraSmall};
 `;
 
 const SidebarHeaderIcon = styled.img`
@@ -169,16 +147,15 @@ export default function Board() {
       <SideContainer>
         <SidebarHeader>
           {headerProperties.map((button) => (
-            <SidebarHeaderButton onClick={button.onClick}>
+            <SidebarHeaderButton onClick={button.onClick} key={button.text}>
               <SidebarHeaderIcon src={button.src} />
-              <text>{button.text}</text>
+              <p>{button.text}</p>
             </SidebarHeaderButton>
           ))}
         </SidebarHeader>
-        <FenContainer>
-          <FenTitle>Forsyth-Edwards Notation (FEN)</FenTitle>
-          <Fen>{chessState.chess.fen()}</Fen>
-        </FenContainer>
+        <Margin />
+        <FenContainer />
+        <Margin />
         <PgnContainer />
       </SideContainer>
     </MainContainer>
