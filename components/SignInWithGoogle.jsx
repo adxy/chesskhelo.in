@@ -20,10 +20,12 @@ export default function SignInWithGoogle() {
       loginResponse.data &&
       loginResponse.data.data &&
       loginResponse.data.data.token &&
-      loginResponse.data.data.expiresIn
+      loginResponse.data.data.expiresIn &&
+      loginResponse.data.data.userId
     ) {
-      const { expiresIn, token } = loginResponse.data.data;
-      userStateActions.login();
+      const { expiresIn, token, userId } = loginResponse.data.data;
+
+      userStateActions.setUserId(userId);
       accessTokenStateActions.update(token);
     }
   };

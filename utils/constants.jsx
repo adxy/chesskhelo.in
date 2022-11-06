@@ -77,3 +77,14 @@ export const AVATAR_SIZES = {
   large: "large",
   extraLarge: "extraLarge",
 };
+
+export const GAME_OVER_REASONS = {
+  checkmate: "checkmate",
+  stalemate: "stalemate",
+  resignation: "resignation",
+  timeout: "timeout",
+  fiftyMoveRule: "draw-by-fifty-move-rule",
+  insufficientMaterial: "draw-by-insufficient-material",
+  threefoldRepetition: "draw-by-threefold-repetition",
+  drawByAgreement: "draw-by-agreement",
+};

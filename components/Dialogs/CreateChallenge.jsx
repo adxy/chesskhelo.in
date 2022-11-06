@@ -112,13 +112,11 @@ export default function CreateChallengeDialog({ onClickClose }) {
   const [socketState, socketStateActions] = useSocketState();
   const [userState, userStateActions] = useUserState();
 
-  const handleCreateChallange = ({}) => {
-    if (true) {
-      socketState.socket.emit("createNewGame", {
-        userId: userState.userId,
-        color: selectedColorOption.colorCode,
-      });
-    }
+  const handleCreateChallange = () => {
+    socketState.socket.emit("createNewGame", {
+      userId: userState.userId,
+      color: selectedColorOption.colorCode,
+    });
   };
 
   return (

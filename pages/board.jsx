@@ -1,12 +1,14 @@
 import dynamic from "next/dynamic";
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BREAK_POINTS } from "../styles/Responsive";
-import PgnContainer from "../components/PgnContainer";
-import FenContainer from "../components/FenContainer";
+import SideContainer from "../components/SideContainer/SideContainer";
 import { useChessState } from "../store/chess";
 
+const DynamicGameEnd = dynamic(() => import("../components/Dialogs/GameEnd"), {
+  ssr: false,
+});
 const DynamicBoard = dynamic(() => import("../components/Board/Board"), {
   ssr: false,
 });
@@ -30,68 +32,6 @@ const MainContainer = styled.div`
   `};
 `;
 
-const SideContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.primary.green};
-  height: 90vh;
-  width: 100%;
-  min-width: 200px;
-  max-width: 500px;
-  overflow: hidden;
-  margin-right: ${({ theme }) => theme.layout.spaces.large};
-  border-radius: ${({ theme }) => theme.layout.standardBorderRadius};
-
-  ${BREAK_POINTS.mobile`
-    max-width: 95vw;
-    max-height: 700px;
-    margin-left: 20px;
-  `} ${BREAK_POINTS.tablet`
-    max-width: 95vw;
-    max-height: 700px;
-    margin-left: 20px;
-  `} ${BREAK_POINTS.laptop`
-    max-width: 95vw;
-    max-height: 700px;
-    margin-left: 20px;
-  `};
-`;
-
-const SidebarHeader = styled.div`
-  display: flex;
-  background-color: ${({ theme }) => theme.colors.primary.blue};
-  height: 60px;
-  width: 100%;
-  padding: ${({ theme }) => theme.layout.spaces.extraSmall};
-`;
-
-const SidebarHeaderButton = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  height: 100%;
-  min-width: 120px;
-  width: auto;
-  margin: auto;
-  font-size: 13px;
-  color: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.layout.standardBorderRadius};
-
-  p {
-    margin: ${({ theme }) => theme.layout.spaces.extraSmall} 0 0;
-  }
-
-  :hover {
-    background-color: ${({ theme }) => theme.colors.primary.pink};
-  }
-`;
-
-const SidebarHeaderIcon = styled.img`
-  width: 22px;
-  height: 22px;
-  margin-bottom: ${({ theme }) => theme.layout.spaces.extraSmall};
-`;
-
 const Margin = styled.div`
   margin: ${({ theme }) => theme.layout.spaces.large};
 `;
@@ -99,14 +39,17 @@ const Margin = styled.div`
 export default function Board() {
   const [chessState, chessStateActions] = useChessState();
   const [renderBoard, setRenderBoard] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
 
-  const copyToClipboard = (item) => {
-    navigator.clipboard.writeText(
-      item === "fen" ? chessState.chess.fen() : chessState.chess.pgn()
-    );
-    //Todo: replace alert with toast
-    alert(`${item === "fen" ? "FEN" : "PGN"} copied to clipboard!`);
-  };
+  const isWhitePlayer = true;
+
+  useEffect(() => {
+    if (chessState.chess.game_over()) {
+      setGameOver(chessState.chess.game_over());
+    }
+  }, [chessState]);
+
+  const handleGameOverDialogClose = () => setGameOver(false);
 
   const resetBoard = () => {
     chessStateActions.resetChess();
@@ -114,50 +57,27 @@ export default function Board() {
     setTimeout(() => {
       setRenderBoard(true);
     }, []);
+    handleGameOverDialogClose();
   };
-
-  const headerProperties = [
-    {
-      onClick: () => copyToClipboard("fen"),
-      src: "/icons/copy-icon.svg",
-      text: "Copy FEN",
-    },
-    {
-      onClick: () => copyToClipboard("pgn"),
-      src: "/icons/copy-icon.svg",
-      text: "Copy PGN",
-    },
-    {
-      onClick: resetBoard,
-      src: "/icons/reload.svg",
-      text: "Reset Board",
-    },
-  ];
 
   return (
     <MainContainer>
       {renderBoard && (
         <DynamicBoard
-          isWhitePlayer={true}
+          isWhitePlayer={isWhitePlayer}
           isPlayable={true}
           allowBothSideMoves={true}
         />
       )}
       <Margin />
-      <SideContainer>
-        <SidebarHeader>
-          {headerProperties.map((button) => (
-            <SidebarHeaderButton onClick={button.onClick} key={button.text}>
-              <SidebarHeaderIcon src={button.src} />
-              <p>{button.text}</p>
-            </SidebarHeaderButton>
-          ))}
-        </SidebarHeader>
-        <Margin />
-        <FenContainer />
-        <Margin />
-        <PgnContainer />
-      </SideContainer>
+      <SideContainer isMultiplayer={false} resetBoard={resetBoard} />
+      {gameOver && (
+        <DynamicGameEnd
+          reason={gameOver}
+          isWhitePlayer={isWhitePlayer}
+          onClickClose={handleGameOverDialogClose}
+        />
+      )}
     </MainContainer>
   );
 }

@@ -4,6 +4,8 @@ const theme = {
   colors: {
     white: "#ffffff",
     black: "#000000",
+    charcoal: "#36454f",
+    gunmetal: "#2a3439",
     background: "#fffafa",
     standardSquareLight: "#eae9d2",
     standardSquareDark: "#4b7399",
@@ -75,6 +77,11 @@ const theme = {
         hoverFont: "#ffffff",
       },
     },
+  },
+  sideContainer: {
+    headerHeight: "60px",
+    fenContainerHeight: "80px",
+    messagesContainerHeight: "250px",
   },
 };
 

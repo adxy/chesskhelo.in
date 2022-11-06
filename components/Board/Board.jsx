@@ -37,6 +37,9 @@ import {
   promoteAudio,
   gameStartAudio,
 } from "../../utils/audio";
+import { useSocketState } from "../../store/socket";
+import { useUserState } from "../../store/user";
+import { useGameState } from "../../store/game";
 
 const BoardContainer = styled.div`
   position: absolute;
@@ -76,12 +79,16 @@ const OuterBoardContainer = styled.div`
 
 export default function Board({
   isWhitePlayer = true,
+  isMultiplayer = false,
   isPlayable = false,
   allowBothSideMoves = false,
   fen = undefined,
   pgn = undefined,
 }) {
   const [chessState, chessStateActions] = useChessState();
+  const [socketState, socketStateActions] = useSocketState();
+  const [userState, userStateActions] = useUserState();
+  const [gameState, gameStateActions] = useGameState();
 
   const [showPawnPromotionDialogue, setShowPawnPromotionDialogue] =
     useState(false);
@@ -91,6 +98,12 @@ export default function Board({
   });
   const [piecesPromotedCount, setPiecesPromotedCount] = useState(0);
   const [boardState, setBoardState] = useState(undefined);
+
+  useEffect(() => {
+    if (isMultiplayer && socketState.socket) {
+      socketState.socket.on("move", (move) => makeMove(move));
+    }
+  }, [isMultiplayer, socketState.isConnected]);
 
   useEffect(() => {
     // fetch board state from backend here, or init default
@@ -142,6 +155,14 @@ export default function Board({
     chessStateActions.setChess(chessState.chess);
 
     if (move) {
+      if (isMultiplayer) {
+        socketState.socket.emit("move", {
+          move: moveObject,
+          userId: userState.userId,
+          gameId: gameState.gameId,
+        });
+      }
+
       chessStateActions.setMoves(chessState.chess.history());
       const destinationSquare = document.getElementById(to);
       const draggedPiece = document.getElementById(from).firstChild;

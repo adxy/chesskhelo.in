@@ -38,6 +38,11 @@ const Store = createStore({
           avatar: user.avatar,
         });
       },
+    setUserId:
+      (userId) =>
+      ({ setState }) => {
+        setState({ userId: userId });
+      },
   },
   // optional, mostly used for easy debugging
   name: "user",

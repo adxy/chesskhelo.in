@@ -1,18 +1,25 @@
 import { useEffect } from "react";
 import io from "socket.io-client";
+import { useRouter } from "next/router";
 
 import GlobalStyle from "../styles/GlobalStyles";
 import Theme from "../styles/Theme";
 import { useAccessTokenState } from "../store/accessToken";
 import { useUserState } from "../store/user";
 import { useSocketState } from "../store/socket";
+import { useMessagesState } from "../store/messages";
 import { setTokenHeader, get } from "../utils/networkUtils";
 import Layout from "../components/Layout/Layout";
+import { useGameState } from "../store/game";
 
 function MyApp({ Component, pageProps }) {
   const [userState, userStateActions] = useUserState();
   const [accessTokenState, accessTokenStateActions] = useAccessTokenState();
   const [socketState, socketStateActions] = useSocketState();
+  const [messagesState, messagesStateActions] = useMessagesState();
+  const [gameState, gameStateActions] = useGameState();
+
+  const router = useRouter();
 
   const updateAccessToken = async () => {
     const response = await get({
@@ -25,11 +32,13 @@ function MyApp({ Component, pageProps }) {
       response.data &&
       response.data.data &&
       response.data.data.token &&
-      response.data.data.expiresIn
+      response.data.data.expiresIn &&
+      response.data.data.userId
     ) {
-      const { expiresIn, token } = response.data.data;
+      const { expiresIn, token, userId } = response.data.data;
       accessTokenStateActions.update(token);
-      userStateActions.login();
+      userStateActions.setUserId(userId);
+
       if (userState.loggedIn) {
         setTimeout(() => updateAccessToken(), [expiresIn * 1000 - 5000]);
       }
@@ -39,22 +48,39 @@ function MyApp({ Component, pageProps }) {
   const fetchAndSetUser = async () => {
     if (
       accessTokenState.token &&
-      !(userState.name && userState.email && userState.userId)
+      userState.userId &&
+      !(userState.name && userState.email)
     ) {
       // fetch and set the user
       const userResponse = await get({
-        url: "/v1/users",
+        url: `/v1/users/${userState.userId}`,
         config: { withCredentials: true },
       });
       if (userResponse && userResponse.ok) {
         userStateActions.set(userResponse.data.data);
+        userStateActions.login();
+      }
+    }
+  };
+
+  const fetchAndSetOpponent = async () => {
+    if (gameState.opponentUserId) {
+      const userResponse = await get({
+        url: `/v1/users/${gameState.opponentUserId}`,
+        config: { withCredentials: true },
+      });
+      if (userResponse && userResponse.ok) {
+        gameStateActions.setOpponent(userResponse.data.data);
       }
     }
   };
 
   useEffect(() => {
     if (accessTokenState.token && !socketState.isConnected) {
-      if (socketState.socket) return;
+      if (socketState.socket) {
+        return;
+      }
+
       const socket = io(process.env.apiBase, {
         extraHeaders: {
           Authorization: accessTokenState.token,
@@ -67,10 +93,20 @@ function MyApp({ Component, pageProps }) {
       });
 
       socketStateActions.set(socket);
-      socketStateActions.setConnected();
-      //return () => socket.disconnect();
     }
   }, [accessTokenState.token]);
+
+  useEffect(() => {
+    if (socketState.socket) {
+      socketState.socket.on("connect", () => {
+        socketStateActions.setConnected();
+      });
+
+      socketState.socket.on("disconnect", () => {
+        socketStateActions.setDisconnected();
+      });
+    }
+  }, [socketState.socket]);
 
   useEffect(() => {
     updateAccessToken();
@@ -83,10 +119,27 @@ function MyApp({ Component, pageProps }) {
   }, [accessTokenState]);
 
   useEffect(() => {
-    if (!(userState.name && userState.email && userState.userId)) {
+    if (userState.userId && !(userState.name && userState.email)) {
       fetchAndSetUser();
     }
-  }, [accessTokenState.token]);
+  }, [accessTokenState.token, userState.userId]);
+
+  useEffect(() => {
+    if (socketState.isConnected) {
+      socketState.socket.on("gameId", (value) => {
+        router.push(`/games/${value.gameId}`);
+      });
+      socketState.socket.on("message", (message) =>
+        messagesStateActions.newMessage(message)
+      );
+    }
+  }, [socketState]);
+
+  useEffect(() => {
+    if (gameState.opponentUserId && accessTokenState.token) {
+      fetchAndSetOpponent();
+    }
+  }, [gameState.opponentUserId]);
 
   return (
     <Theme>
