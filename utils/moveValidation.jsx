@@ -25,6 +25,8 @@
  *
  *----------------------------------------------------------------------------*/
 
+/* eslint-disable */
+
 var Chess = function (fen) {
   var BLACK = "b";
   var WHITE = "w";
@@ -1452,13 +1454,22 @@ var Chess = function (fen) {
     },
 
     game_over: function () {
-      return (
-        half_moves >= 100 ||
-        in_checkmate() ||
-        in_stalemate() ||
-        insufficient_material() ||
-        in_threefold_repetition()
-      );
+      if (half_moves >= 100) {
+        return "draw-by-fifty-move-rule";
+      }
+      if (in_checkmate()) {
+        return "checkmate";
+      }
+      if (in_stalemate()) {
+        return "stalemate";
+      }
+      if (insufficient_material()) {
+        return "draw-by-insufficient-material";
+      }
+      if (in_threefold_repetition()) {
+        return "draw-by-threefold-repetition";
+      }
+      return false;
     },
 
     validate_fen: function (fen) {
