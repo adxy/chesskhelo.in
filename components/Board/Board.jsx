@@ -213,12 +213,15 @@ export default function Board({
           break;
 
         case EN_PASSANT_CAPTURE:
-          captureAudio.play();
-          const capturedSquare = document.getElementById(
-            String(move.to[0] + move.from[1])
-          );
-          capturedSquare.removeChild(capturedSquare.firstChild);
-          destinationSquare.appendChild(draggedPiece);
+          {
+            captureAudio.play();
+            // eslint-disable-next-line no-case-declarations
+            const capturedSquare = document.getElementById(
+              String(move.to[0] + move.from[1])
+            );
+            capturedSquare.removeChild(capturedSquare.firstChild);
+            destinationSquare.appendChild(draggedPiece);
+          }
           break;
 
         default:

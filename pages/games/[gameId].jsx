@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import styled from "styled-components";
@@ -93,15 +94,17 @@ export default function Board() {
             break;
 
           case "inProgress":
-            const chess = new Chess();
-            chess.load_pgn(event.game.pgn);
-            chessStateActions.setChess(chess);
-            setGameStatus("inProgress");
-            const { wUserId, bUserId } = event.game;
-            setIsWhitePlayer(wUserId === userState.userId ? true : false);
-            const opponentUserId =
-              wUserId === userState.userId ? wUserId : bUserId;
-            gameStateActions.setOpponentUserId(opponentUserId);
+            {
+              const chess = new Chess();
+              chess.load_pgn(event.game.pgn);
+              chessStateActions.setChess(chess);
+              setGameStatus("inProgress");
+              const { wUserId, bUserId } = event.game;
+              setIsWhitePlayer(wUserId === userState.userId ? true : false);
+              const opponentUserId =
+                wUserId === userState.userId ? wUserId : bUserId;
+              gameStateActions.setOpponentUserId(opponentUserId);
+            }
             break;
 
           case "gameOver":
