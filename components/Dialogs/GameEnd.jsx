@@ -92,6 +92,10 @@ export default function GameEndDialog({ reason, isWhitePlayer, onClickClose }) {
   };
 
   const getGameEndResult = (reason) => {
+    if (reason === "aborted") {
+      return { title: "ABORTED", message: "The game has been aborted!" };
+    }
+
     const isDraw = [
       GAME_OVER_REASONS.drawByAgreement,
       GAME_OVER_REASONS.stalemate,
