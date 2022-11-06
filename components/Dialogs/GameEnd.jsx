@@ -124,7 +124,9 @@ export default function GameEndDialog({ reason, isWhitePlayer, onClickClose }) {
       <TitleContainer>{gameEndResult.title}</TitleContainer>
       <AvatarContainer>
         <Avatar
-          src={userState.avatar}
+          src={
+            userState.avatar ? userState.avatar : "/images/avatar/default.jpg"
+          }
           thumbnailSize="extraLarge"
           userName={userState.name}
         />
