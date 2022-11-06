@@ -65,12 +65,12 @@ function MyApp({ Component, pageProps }) {
 
   const fetchAndSetOpponent = async () => {
     if (gameState.opponentUserId) {
-      const userResponse = await get({
+      const opponentUserResponse = await get({
         url: `/v1/users/${gameState.opponentUserId}`,
         config: { withCredentials: true },
       });
-      if (userResponse && userResponse.ok) {
-        gameStateActions.setOpponent(userResponse.data.data);
+      if (opponentUserResponse && opponentUserResponse.ok) {
+        gameStateActions.setOpponent(opponentUserResponse.data.data);
       }
     }
   };

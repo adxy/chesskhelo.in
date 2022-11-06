@@ -102,7 +102,7 @@ export default function Board() {
               const { wUserId, bUserId } = event.game;
               setIsWhitePlayer(wUserId === userState.userId ? true : false);
               const opponentUserId =
-                wUserId === userState.userId ? wUserId : bUserId;
+                wUserId === userState.userId ? bUserId : wUserId;
               gameStateActions.setOpponentUserId(opponentUserId);
             }
             break;
