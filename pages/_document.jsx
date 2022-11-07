@@ -38,6 +38,8 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;400;600;700;800&display=swap"
             rel="stylesheet"
           />
+          <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+          <link rel="icon" type="image/png" href="/icons/favicon.png" />
         </Head>
         <body>
           <Main />
