@@ -84,6 +84,7 @@ export default function Hero() {
   const [showCreateChallengeDialog, setShowCreateChallengeDialog] =
     useState(false);
   const [userState, _] = useUserState();
+  const [showInfoDialog, setShowInfoDialog] = useState(true);
 
   const currentDevice = useDeviceDetect();
 
@@ -107,14 +108,20 @@ export default function Hero() {
   const toggleCreateChallengeDialog = () =>
     setShowCreateChallengeDialog((current) => !current);
 
+  const toggleInfoDialog = () => setShowInfoDialog((current) => !current);
+
   const data =
     "Hey, Welcome! Looks like you're using a mobile device, CK does not support touch devices to make a move. Support for touch devices coming in 2 weeks!";
 
   return (
     <>
       <HeroContainer>
-        {currentDevice.isMobile() && (
-          <DynamicInfoDialog title="INFO" description={data} />
+        {currentDevice.isMobile() && showInfoDialog && (
+          <DynamicInfoDialog
+            title="INFO"
+            description={data}
+            onClickClose={toggleInfoDialog}
+          />
         )}
         {showCreateChallengeDialog && (
           <CreateChallengeDialog onClickClose={toggleCreateChallengeDialog} />
