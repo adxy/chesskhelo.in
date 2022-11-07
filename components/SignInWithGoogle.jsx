@@ -3,6 +3,7 @@ import Script from "next/script";
 import { post } from "../utils/networkUtils";
 import { useUserState } from "../store/user";
 import { useAccessTokenState } from "../store/accessToken";
+import useDeviceDetect from "../hooks/useDeviceDetect";
 
 export default function SignInWithGoogle() {
   const [userState, userStateActions] = useUserState();
@@ -30,6 +31,8 @@ export default function SignInWithGoogle() {
     }
   };
 
+  const currentDevice = useDeviceDetect();
+
   return (
     <>
       <Script
@@ -56,9 +59,9 @@ export default function SignInWithGoogle() {
       <div
         className="g_id_signin"
         data-type="standard"
-        data-size="large"
+        data-size={currentDevice.isMobile() ? "medium" : "large"}
         data-theme="outline"
-        data-text="sign_in_with"
+        data-text={currentDevice.isMobile() ? "signin" : "sign_in_with"}
         data-shape="pill"
         data-logo_alignment="left"
       ></div>
