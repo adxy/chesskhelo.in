@@ -1,15 +1,19 @@
 import Script from "next/script";
+import { useState } from "react";
 
 import { post } from "../utils/networkUtils";
 import { useUserState } from "../store/user";
 import { useAccessTokenState } from "../store/accessToken";
 import useDeviceDetect from "../hooks/useDeviceDetect";
+import Loader from "../components/Loader";
 
 export default function SignInWithGoogle() {
+  const [loading, setLoading] = useState(false);
   const [userState, userStateActions] = useUserState();
   const [accessTokenState, accessTokenStateActions] = useAccessTokenState();
 
   window.handleCredentialResponse = async (response) => {
+    setLoading(true);
     const loginResponse = await post({
       url: "/v1/login",
       body: { googleJwt: response.credential },
@@ -33,7 +37,7 @@ export default function SignInWithGoogle() {
 
   const currentDevice = useDeviceDetect();
 
-  return (
+  return !loading ? (
     <>
       <Script
         src="https://accounts.google.com/gsi/client"
@@ -66,5 +70,7 @@ export default function SignInWithGoogle() {
         data-logo_alignment="left"
       ></div>
     </>
+  ) : (
+    <Loader />
   );
 }
