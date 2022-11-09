@@ -58,6 +58,8 @@ export default function Board() {
   const [gameOver, setGameOver] = useState(false);
   const [messagesState, messagesStateActions] = useMessagesState();
 
+  useEffect(() => messagesStateActions.clear(), []);
+
   const router = useRouter();
   const { gameId } = router.query;
 
