@@ -1,13 +1,45 @@
-## Getting Started
+## Introduction
 
 ![chesskhelo.in banner](/public/miscellaneous/chesskhelo-readme-banner.jpg?raw=true "chesskhelo.in banner")
 
-First, run the development server:
+[![Open Source Love](https://firstcontributions.github.io/open-source-badges/badges/open-source-v1/open-source.svg)](https://github.com/firstcontributions/open-source-badges)
+
+## Getting Started
+
+Setup Backend from here: [Chesskhelo Backend](https://github.com/adxy/chesskhelo.in-be)
+
+Clone & CD into the directory:
+
+```bash
+git clone git@github.com:adxy/chesskhelo.in.git
+
+cd chesskhelo.in
+```
+
+Make sure you have all the Environment Vars populated in `.env` file by referencing `.env.example`.
+
+Install all the packages:
+
+```bash
+yarn
+```
+
+Run the development server:
 
 ```bash
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:(PORT YOU DEFINED) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Contributing
+
+Chesskhelo is an option source projects and contributions are most welcomed!
+
+See [CONTRIBUTING.md](https://github.com/adxy/chesskhelo.in/blob/master/CONTRIBUTING.md) for ways to get started.
+
+## Screenshots
+
+![chesskhelo.in banner](/public/miscellaneous/mp-game-ss.png?raw=true "chesskhelo.in multiplayer game")
+
+![chesskhelo.in banner](/public/miscellaneous/homepage-ss.png?raw=true "chesskhelo.in multiplayer game")
