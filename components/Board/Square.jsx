@@ -42,28 +42,15 @@ const getDraggable = ({ isWhitePlayer, allowBothSidesMove, piece }) => {
   return "false";
 };
 
-export default function Square({
-  id,
-  squareType,
-  piece,
-  allowBothSidesMove,
-  isWhitePlayer,
-}) {
+export default function Square({ id, squareType, piece }) {
   return (
     <SquareBox id={id} squareType={squareType} className="square">
       {piece && (
-        <>
-          <Piece
-            className={`piece ${piece[0] === "w" ? "piece-w" : "piece-b"}`}
-            id={`${id}-${piece}`}
-            src={`/images/pieces/${piece}.png`}
-            draggable={getDraggable({
-              isWhitePlayer,
-              allowBothSidesMove,
-              piece,
-            })}
-          />
-        </>
+        <Piece
+          className={`piece ${piece[0] === "w" ? "piece-w" : "piece-b"}`}
+          id={`${id}-${piece}`}
+          src={`/images/pieces/${piece}.png`}
+        />
       )}
     </SquareBox>
   );

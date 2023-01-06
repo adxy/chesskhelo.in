@@ -29,7 +29,7 @@ a, a:focus {
 .hide{
     display: none;
 }
-.drag-over {
+.inner-border-highlight {
     border: solid 4px #FFFFFF;
 }
 .visible-mobile {

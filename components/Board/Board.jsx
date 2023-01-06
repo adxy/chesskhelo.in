@@ -27,6 +27,12 @@ import {
   CAPTURE_PROMOTION,
   EN_PASSANT_CAPTURE,
 } from "../../utils/constants";
+import {
+  getEventPosition,
+  getKeyAtDomPos,
+  disableScroll,
+  enableScroll,
+} from "../../utils/commonFunctions";
 import PawnPromotionDialogue from "./PawnPromotionDialogue";
 import { useChessState } from "../../store/chess";
 import Loader from "../Loader";
@@ -99,6 +105,8 @@ export default function Board({
   const [piecesPromotedCount, setPiecesPromotedCount] = useState(0);
   const [boardState, setBoardState] = useState(undefined);
 
+  let lastTouchPosition = null;
+
   useEffect(() => {
     if (isMultiplayer && socketState.socket) {
       socketState.socket.on("move", (move) => makeMove(move));
@@ -167,7 +175,6 @@ export default function Board({
       const destinationSquare = document.getElementById(to);
       const draggedPiece = document.getElementById(from).firstChild;
       const destinationPiece = document.getElementById(to).firstChild;
-      destinationSquare.classList.remove("drag-over");
 
       switch (move.flags) {
         case STANDARD_CAPTURE:
@@ -297,8 +304,8 @@ export default function Board({
       destinationSquare.removeChild(destinationSquare.firstChild);
     }
     destinationSquare.appendChild(promotedPiece);
-    promotedPiece.addEventListener("dragstart", dragStart);
-    promotedPiece.addEventListener("dragend", dragEnd);
+    promotedPiece.addEventListener("mousedown", handleDragStart);
+    promotedPiece.addEventListener("touchstart", handleDragStart);
     setPiecesPromotedCount(piecesPromotedCount + 1);
   };
 
@@ -327,67 +334,205 @@ export default function Board({
         );
       }
 
-      pieces.forEach((piece) => piece.addEventListener("dragstart", dragStart));
-      pieces.forEach((piece) => piece.addEventListener("dragend", dragEnd));
-
-      const squares = document.querySelectorAll(".square");
-
-      squares.forEach((square) => {
-        square.addEventListener("dragenter", dragEnter);
-        square.addEventListener("dragover", dragOver);
-        square.addEventListener("dragleave", dragLeave);
-        square.addEventListener("drop", drop);
+      pieces.forEach((piece) => {
+        piece.addEventListener("mousedown", handleDragStart);
+        piece.addEventListener("touchstart", handleDragStart);
       });
     }, [boardState]);
   }
 
-  const dragStart = (e) => {
-    e.dataTransfer.setData("text/plain", e.target.id);
-    setTimeout(() => {
-      e.target.classList.add("hide");
-    }, 0);
-  };
+  const handleDragStart = (event) => {
+    event.preventDefault();
 
-  const dragEnter = (e) => {
-    e.preventDefault();
-    e.target.classList.add("drag-over");
-  };
+    if (window.scrollY !== 0 || window.scrollX !== 0) {
+      window.scrollTo(0, 0);
+    }
 
-  const dragOver = (e) => {
-    e.preventDefault();
-    e.target.classList.add("drag-over");
-  };
+    disableScroll();
+    const draggedPiece = document.getElementById(event.target.id);
+    const isWhitePiece = draggedPiece.classList.contains("piece-w");
 
-  const dragLeave = (e) => {
-    e.target.classList.remove("drag-over");
-  };
+    const onlyMoveSingleSide = !allowBothSideMoves || isMultiplayer;
+    const isMovingOpponentPiece =
+      (!isWhitePlayer && isWhitePiece) || (isWhitePlayer && !isWhitePiece);
 
-  const dragEnd = (e) => {
-    const draggedPiece = document.getElementById(e.path[0].id);
-    draggedPiece.classList.remove("hide");
-  };
-
-  const drop = (element) => {
-    const id = element.dataTransfer.getData("text/plain");
-    const draggedPiece = document.getElementById(id);
-    const dropSquareId = element.target.classList.contains("piece")
-      ? element.target.parentElement.id
-      : element.target.id;
-
-    const isPromotionMove = isPromotion({
-      from: draggedPiece.parentElement.id,
-      to: dropSquareId,
-    });
-
-    if (isPromotionMove) {
-      handlePawnPromotionDialogue({
-        from: draggedPiece.parentElement.id,
-        to: dropSquareId,
-      });
+    if (onlyMoveSingleSide && isMovingOpponentPiece) {
       return;
     }
 
-    makeMove({ from: draggedPiece.parentElement.id, to: dropSquareId });
+    const draggedPieceClone = draggedPiece.cloneNode();
+    draggedPiece.classList.add("hide");
+
+    const chessBoard = document.getElementById("chess-board");
+
+    const boardHeight = chessBoard.offsetHeight;
+
+    const pieceHeight = boardHeight / 8 + "px";
+
+    draggedPieceClone.style.height = pieceHeight;
+    draggedPieceClone.style.width = pieceHeight;
+    draggedPieceClone.style.position = "absolute";
+    draggedPieceClone.style.zIndex = 1000;
+    document.body.append(draggedPieceClone);
+
+    var chessBoardRect = chessBoard.getBoundingClientRect();
+
+    const moveAt = ({ clientX, clientY }) => {
+      const isInsideParent =
+        clientX >= chessBoardRect.left &&
+        clientX <= chessBoardRect.right &&
+        clientY >= chessBoardRect.top &&
+        clientY <= chessBoardRect.bottom;
+
+      // Keep piece inside board
+      if (isInsideParent) {
+        draggedPieceClone.style.left = `${
+          clientX - draggedPieceClone.offsetWidth / 2
+        }px`;
+        draggedPieceClone.style.top = `${
+          clientY - draggedPieceClone.offsetHeight / 2
+        }px`;
+      } else {
+        if (clientX >= chessBoardRect.right) {
+          draggedPieceClone.style.left = `${
+            chessBoardRect.right - draggedPieceClone.offsetWidth / 2
+          }px`;
+        }
+
+        if (clientX <= chessBoardRect.left) {
+          draggedPieceClone.style.left = `${
+            chessBoardRect.left - draggedPieceClone.offsetWidth / 2
+          }px`;
+        }
+
+        if (clientY >= chessBoardRect.bottom) {
+          draggedPieceClone.style.top = `${
+            chessBoardRect.bottom - draggedPieceClone.offsetHeight / 2
+          }px`;
+        }
+        if (clientY <= chessBoardRect.top) {
+          draggedPieceClone.style.top = `${
+            chessBoardRect.top - draggedPieceClone.offsetHeight / 2
+          }px`;
+        }
+      }
+    };
+
+    const [clientX, clientY] = getEventPosition(event);
+
+    moveAt({ clientX, clientY });
+
+    let lastElementId = null;
+
+    const addOrRemoveSquareHighlight = ({ event }) => {
+      const eventPosition = getEventPosition(event) || lastTouchPosition;
+
+      let elementBelowId = getKeyAtDomPos({
+        pos: eventPosition,
+        asWhite: isWhitePlayer,
+        bounds: chessBoardRect,
+      });
+
+      let elementBelow = document.getElementById(elementBelowId);
+
+      if (!elementBelow) {
+        return;
+      }
+
+      if (!elementBelow.classList.contains("square")) {
+        return;
+      }
+
+      // don't highlight if over same color piece or origin
+      if (
+        elementBelow.firstElementChild &&
+        elementBelow.firstElementChild.classList.contains(
+          `piece-${isWhitePiece ? "w" : "b"}`
+        )
+      ) {
+        return;
+      }
+
+      if (lastElementId && lastElementId !== elementBelow.id) {
+        document
+          .getElementsByClassName("inner-border-highlight")[0]
+          .classList.remove("inner-border-highlight");
+      }
+
+      if (elementBelow) {
+        lastElementId = elementBelow.id;
+        elementBelow.classList.add("inner-border-highlight");
+      }
+    };
+
+    const handleMoveEvent = (event) => {
+      if (!event.touches || event.touches.length < 2) {
+        lastTouchPosition = getEventPosition(event);
+      }
+      const [clientX, clientY] = getEventPosition(event);
+      moveAt({ clientX, clientY });
+      addOrRemoveSquareHighlight({ event });
+    };
+
+    const handleEndEvent = (event) => {
+      event.preventDefault();
+      enableScroll();
+      document.removeEventListener("mousemove", handleMoveEvent);
+      document.removeEventListener("mouseup", handleEndEvent);
+      document.removeEventListener("touchmove", handleMoveEvent);
+      document.removeEventListener("touchend", handleEndEvent);
+
+      draggedPieceClone.remove();
+      draggedPiece.classList.remove("hide");
+
+      const highlightedSquares = Array.from(
+        document.getElementsByClassName("inner-border-highlight")
+      );
+
+      if (highlightedSquares && highlightedSquares.length) {
+        highlightedSquares.forEach((highlightedSquare) =>
+          highlightedSquare.classList.remove("inner-border-highlight")
+        );
+      }
+
+      const eventPosition = getEventPosition(event) || lastTouchPosition;
+
+      if (!eventPosition) {
+        return;
+      }
+
+      const destination = getKeyAtDomPos({
+        pos: eventPosition,
+        asWhite: isWhitePlayer,
+        bounds: chessBoardRect,
+      });
+
+      const origin = draggedPiece.parentElement.id;
+
+      if (!destination || !origin) {
+        return;
+      }
+
+      const isPromotionMove = isPromotion({
+        from: origin,
+        to: destination,
+      });
+
+      if (isPromotionMove) {
+        handlePawnPromotionDialogue({
+          from: origin,
+          to: destination,
+        });
+        return;
+      }
+
+      makeMove({ from: origin, to: destination });
+    };
+
+    document.addEventListener("mousemove", handleMoveEvent);
+    document.addEventListener("mouseup", handleEndEvent);
+    document.addEventListener("touchmove", handleMoveEvent);
+    document.addEventListener("touchend", handleEndEvent);
   };
 
   return boardState ? (
@@ -401,8 +546,6 @@ export default function Board({
               id={value.id}
               squareType={value.squareType}
               piece={value.piece}
-              allowBothSidesMove={allowBothSideMoves}
-              isWhitePlayer={isWhitePlayer}
             />
           ))}
           {showPawnPromotionDialogue && (

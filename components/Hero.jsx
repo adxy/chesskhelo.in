@@ -2,16 +2,12 @@ import styled from "styled-components";
 import lottie from "lottie-web";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
 
 import headerAnimationData from "../public/lotties/header-animation.json";
 import Button from "./Buttons/Button";
 import { BREAK_POINTS } from "../styles/Responsive";
 import { useUserState } from "../store/user";
 import CreateChallengeDialog from "./Dialogs/CreateChallenge";
-import useDeviceDetect from "../hooks/useDeviceDetect";
-
-const DynamicInfoDialog = dynamic(() => import("./Dialogs/Info"));
 
 const HeroContainer = styled.div`
   display: flex;
@@ -84,9 +80,6 @@ export default function Hero() {
   const [showCreateChallengeDialog, setShowCreateChallengeDialog] =
     useState(false);
   const [userState, _] = useUserState();
-  const [showInfoDialog, setShowInfoDialog] = useState(true);
-
-  const currentDevice = useDeviceDetect();
 
   useEffect(() => {
     lottie.loadAnimation({
@@ -108,21 +101,9 @@ export default function Hero() {
   const toggleCreateChallengeDialog = () =>
     setShowCreateChallengeDialog((current) => !current);
 
-  const toggleInfoDialog = () => setShowInfoDialog((current) => !current);
-
-  const data =
-    "Hey, Welcome! Looks like you're using a mobile device, CK does not support touch devices to make a move. Support for touch devices coming in 2 weeks!";
-
   return (
     <>
       <HeroContainer>
-        {currentDevice.isMobile() && showInfoDialog && (
-          <DynamicInfoDialog
-            title="INFO"
-            description={data}
-            onClickClose={toggleInfoDialog}
-          />
-        )}
         {showCreateChallengeDialog && (
           <CreateChallengeDialog onClickClose={toggleCreateChallengeDialog} />
         )}

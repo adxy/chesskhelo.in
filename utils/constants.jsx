@@ -1,4 +1,5 @@
-export const ALPHABETS = ["a", "b", "c", "d", "e", "f", "g", "h"];
+export const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
+export const RANKS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 export const MOVE_COLOR_WHITE = "w";
 export const PIECE_DEFAULT_POSITION_LIST = {
   a8: "br",
