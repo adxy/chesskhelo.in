@@ -2,8 +2,7 @@ import Script from "next/script";
 import { useState } from "react";
 
 import { post } from "../utils/networkUtils";
-import { useUserState } from "../store/user";
-import { useAccessTokenState } from "../store/accessToken";
+import { useUserState, useAccessTokenState } from "../store/store";
 import useDeviceDetect from "../hooks/useDeviceDetect";
 import Loader from "../components/Loader";
 

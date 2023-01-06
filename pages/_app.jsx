@@ -4,13 +4,15 @@ import { useRouter } from "next/router";
 
 import GlobalStyle from "../styles/GlobalStyles";
 import Theme from "../styles/Theme";
-import { useAccessTokenState } from "../store/accessToken";
-import { useUserState } from "../store/user";
-import { useSocketState } from "../store/socket";
-import { useMessagesState } from "../store/messages";
+import {
+  useAccessTokenState,
+  useUserState,
+  useSocketState,
+  useMessagesState,
+  useGameState,
+} from "../store/store";
 import { setTokenHeader, get } from "../utils/networkUtils";
 import Layout from "../components/Layout/Layout";
-import { useGameState } from "../store/game";
 
 function MyApp({ Component, pageProps }) {
   const [userState, userStateActions] = useUserState();

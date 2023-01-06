@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import { useEffect } from "react";
 
-import { useChessState } from "../../store/chess";
-import { useUserState } from "../../store/user";
+import { useChessState, useUserState } from "../../store/store";
 import Avatar from "../Avatar";
 import DialogCloseButton from "../Buttons/DialogCloseButton";
 import { GAME_OVER_REASONS } from "../../utils/constants";

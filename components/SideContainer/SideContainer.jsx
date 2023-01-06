@@ -2,12 +2,10 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 
 import { BREAK_POINTS } from "../../styles/Responsive";
-import { useChessState } from "../../store/chess";
-import { useSocketState } from "../../store/socket";
+import { useChessState, useSocketState, useUserState } from "../../store/store";
 import InfoContainer from "./InfoContainer";
 import PgnContainer from "./PgnContainer";
 import FenContainer from "./FenContainer";
-import { useUserState } from "../../store/user";
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.charcoal};

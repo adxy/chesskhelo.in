@@ -4,8 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import Avatar from "../Avatar";
-import { useAccessTokenState } from "../../store/accessToken";
-import { useUserState } from "../../store/user";
+import { useAccessTokenState, useUserState } from "../../store/store";
 import { del } from "../../utils/networkUtils";
 import ProfileDialogue from "../Dialogs/Profile";
 

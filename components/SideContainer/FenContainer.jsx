@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { useChessState } from "../../store/chess";
+import { useChessState } from "../../store/store";
 
 const Container = styled.div`
   display: flex;

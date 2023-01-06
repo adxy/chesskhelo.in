@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { useUserState } from "../../store/user";
+import { useUserState } from "../../store/store";
 import Avatar from "../Avatar";
 import Button from "../Buttons/Button";
 import DialogCloseButton from "../Buttons/DialogCloseButton";

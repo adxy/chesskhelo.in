@@ -1,9 +1,11 @@
 import styled from "styled-components";
-import { useGameState } from "../../store/game";
 
-import { useMessagesState } from "../../store/messages";
-import { useSocketState } from "../../store/socket";
-import { useUserState } from "../../store/user";
+import {
+  useMessagesState,
+  useSocketState,
+  useUserState,
+  useGameState,
+} from "../../store/store";
 
 const messageBarHeight = "40px";
 

@@ -5,14 +5,16 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 
 import { BREAK_POINTS } from "../../styles/Responsive";
-import { useChessState } from "../../store/chess";
-import { useUserState } from "../../store/user";
-import { useSocketState } from "../../store/socket";
+import {
+  useChessState,
+  useUserState,
+  useSocketState,
+  useGameState,
+  useMessagesState,
+} from "../../store/store";
 import SideContainer from "../../components/SideContainer/SideContainer";
 import WaitingContainer from "../../components/WaitingContainer";
 import Chess from "../../utils/moveValidation";
-import { useGameState } from "../../store/game";
-import { useMessagesState } from "../../store/messages";
 import { GAME_OVER_REASONS } from "../../utils/constants";
 
 const DynamicGameEnd = dynamic(

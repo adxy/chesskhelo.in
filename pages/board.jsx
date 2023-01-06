@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { BREAK_POINTS } from "../styles/Responsive";
 import SideContainer from "../components/SideContainer/SideContainer";
-import { useChessState } from "../store/chess";
+import { useChessState } from "../store/store";
 
 const DynamicGameEnd = dynamic(() => import("../components/Dialogs/GameEnd"), {
   ssr: false,

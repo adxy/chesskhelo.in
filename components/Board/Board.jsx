@@ -34,7 +34,12 @@ import {
   enableScroll,
 } from "../../utils/commonFunctions";
 import PawnPromotionDialogue from "./PawnPromotionDialogue";
-import { useChessState } from "../../store/chess";
+import {
+  useChessState,
+  useSocketState,
+  useUserState,
+  useGameState,
+} from "../../store/store";
 import Loader from "../Loader";
 import {
   moveSelfAudio,
@@ -43,9 +48,6 @@ import {
   promoteAudio,
   gameStartAudio,
 } from "../../utils/audio";
-import { useSocketState } from "../../store/socket";
-import { useUserState } from "../../store/user";
-import { useGameState } from "../../store/game";
 
 const BoardContainer = styled.div`
   position: absolute;

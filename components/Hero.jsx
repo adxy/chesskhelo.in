@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import headerAnimationData from "../public/lotties/header-animation.json";
 import Button from "./Buttons/Button";
 import { BREAK_POINTS } from "../styles/Responsive";
-import { useUserState } from "../store/user";
+import { useUserState } from "../store/store";
 import CreateChallengeDialog from "./Dialogs/CreateChallenge";
 
 const HeroContainer = styled.div`

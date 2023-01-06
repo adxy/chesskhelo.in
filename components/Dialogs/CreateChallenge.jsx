@@ -4,8 +4,7 @@ import { useState } from "react";
 import DialogCloseButton from "../Buttons/DialogCloseButton";
 import Button from "../Buttons/Button";
 import { getRandomInteger } from "../../utils/commonFunctions";
-import { useSocketState } from "../../store/socket";
-import { useUserState } from "../../store/user";
+import { useSocketState, useUserState } from "../../store/store";
 import { BREAK_POINTS } from "../../styles/Responsive";
 
 const DialogContainer = styled.div`
