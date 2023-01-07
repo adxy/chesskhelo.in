@@ -384,6 +384,9 @@ export default function Board({
     let lastTouchPosition = null;
     event.preventDefault();
 
+    // remove any focussed element
+    document.activeElement.blur();
+
     showPossibleMoves({ square: event.target.parentElement.id });
 
     if (window.scrollY !== 0 || window.scrollX !== 0) {
