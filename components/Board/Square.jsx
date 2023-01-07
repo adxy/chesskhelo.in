@@ -29,19 +29,6 @@ const Piece = styled.img`
   }
 `;
 
-const getDraggable = ({ isWhitePlayer, allowBothSidesMove, piece }) => {
-  if (allowBothSidesMove) {
-    return "true";
-  }
-  if (isWhitePlayer && piece[0] === "w") {
-    return "true";
-  }
-  if (!isWhitePlayer && piece[0] === "b") {
-    return "true";
-  }
-  return "false";
-};
-
 export default function Square({ id, squareType, piece }) {
   return (
     <SquareBox id={id} squareType={squareType} className="square">
