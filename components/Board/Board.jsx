@@ -164,6 +164,8 @@ export default function Board({
     chessStateActions.setChess(chessState.chess);
 
     if (move) {
+      removePossibleMoves();
+
       if (isMultiplayer) {
         socketState.socket.emit("move", {
           move: moveObject,
@@ -342,10 +344,18 @@ export default function Board({
     }, [boardState]);
   }
 
-  const removePossibleMoves = () =>
-    Array.from(document.getElementsByClassName("valid-square-to-move")).forEach(
-      (element) => element.classList.remove("valid-square-to-move")
+  const removePossibleMoves = () => {
+    Array.from(
+      document.querySelectorAll(
+        ".valid-square-to-move, .valid-square-to-move-capture"
+      )
+    ).forEach((element) =>
+      element.classList.remove(
+        "valid-square-to-move",
+        "valid-square-to-move-capture"
+      )
     );
+  };
 
   const showPossibleMoves = ({ square }) => {
     if (!square) {
@@ -356,13 +366,18 @@ export default function Board({
         square,
         verbose: true,
       })
-      .map((move) => move.to);
+      .map((move) => [move.to, move.flags]);
 
     removePossibleMoves();
-
-    possibleSquaresToMove.forEach((square) =>
-      document.getElementById(square).classList.add("valid-square-to-move")
-    );
+    possibleSquaresToMove.forEach((element) => {
+      document
+        .getElementById(element[0])
+        .classList.add(
+          ["c", "cp"].includes(element[1])
+            ? "valid-square-to-move-capture"
+            : "valid-square-to-move"
+        );
+    });
   };
 
   const handleDragStart = (event) => {
@@ -553,7 +568,6 @@ export default function Board({
         return;
       }
 
-      removePossibleMoves();
       makeMove({ from: originId, to: destinationId });
     };
 

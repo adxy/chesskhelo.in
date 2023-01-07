@@ -41,7 +41,15 @@ a, a:focus {
   height: 40%;
   border-radius: 50%;
   background-color: black;
-  opacity: 0.3;
+  opacity: 0.2;
+}
+.valid-square-to-move-capture:before {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px rgba(0,0,0,0.2) inset;  
 }
 
 @media (max-width: 640px) {

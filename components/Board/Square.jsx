@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const SquareBox = styled.div`
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
   width: 12.5%;
