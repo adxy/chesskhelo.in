@@ -109,6 +109,7 @@ export default function Board({
 
   useEffect(() => {
     if (isMultiplayer && socketState.socket) {
+      removePossibleMoves();
       socketState.socket.on("move", (move) => makeMove(move));
     }
   }, [isMultiplayer, socketState.isConnected]);
@@ -341,9 +342,34 @@ export default function Board({
     }, [boardState]);
   }
 
+  const removePossibleMoves = () =>
+    Array.from(document.getElementsByClassName("valid-square-to-move")).forEach(
+      (element) => element.classList.remove("valid-square-to-move")
+    );
+
+  const showPossibleMoves = ({ square }) => {
+    if (!square) {
+      return;
+    }
+    const possibleSquaresToMove = chessState.chess
+      .moves({
+        square,
+        verbose: true,
+      })
+      .map((move) => move.to);
+
+    removePossibleMoves();
+
+    possibleSquaresToMove.forEach((square) =>
+      document.getElementById(square).classList.add("valid-square-to-move")
+    );
+  };
+
   const handleDragStart = (event) => {
     let lastTouchPosition = null;
     event.preventDefault();
+
+    showPossibleMoves({ square: event.target.parentElement.id });
 
     if (window.scrollY !== 0 || window.scrollX !== 0) {
       window.scrollTo(0, 0);
@@ -527,6 +553,7 @@ export default function Board({
         return;
       }
 
+      removePossibleMoves();
       makeMove({ from: originId, to: destinationId });
     };
 

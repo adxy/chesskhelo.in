@@ -35,6 +35,14 @@ a, a:focus {
 .visible-mobile {
   display: none !important;
 }
+.valid-square-to-move:before {
+  content: '';
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  background-color: black;
+  opacity: 0.3;
+}
 
 @media (max-width: 640px) {
   .visible-mobile {
