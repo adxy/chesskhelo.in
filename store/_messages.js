@@ -10,7 +10,7 @@ const Store = createStore({
       (message) =>
       ({ setState, getState }) => {
         setState({
-          messages: [...getState().messages, message],
+          messages: [message, ...getState().messages],
         });
       },
 

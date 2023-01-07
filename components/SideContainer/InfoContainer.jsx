@@ -20,7 +20,7 @@ const Container = styled.div`
 
 const MessagesContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   height: calc(100% - ${messageBarHeight} - 15px - 30px - 12px - 12px - 32px);
   width: 90%;
   background-color: ${({ theme }) => theme.colors.white};
@@ -130,11 +130,6 @@ export default function InfoContainer() {
   const [userState, userStateActions] = useUserState();
   const [gameState, gameStateActions] = useGameState();
 
-  const scrollToBottom = (id) => {
-    const element = document.getElementById(id);
-    element.scrollTop = element.scrollHeight;
-  };
-
   const sendMessage = (event) => {
     event.preventDefault();
     if (event.key === "Enter" && event.target.value.length) {
@@ -146,7 +141,6 @@ export default function InfoContainer() {
       });
 
       event.currentTarget.value = "";
-      scrollToBottom("messages-container");
     }
   };
 
