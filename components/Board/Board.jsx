@@ -107,8 +107,6 @@ export default function Board({
   const [piecesPromotedCount, setPiecesPromotedCount] = useState(0);
   const [boardState, setBoardState] = useState(undefined);
 
-  let lastTouchPosition = null;
-
   useEffect(() => {
     if (isMultiplayer && socketState.socket) {
       socketState.socket.on("move", (move) => makeMove(move));
@@ -344,6 +342,7 @@ export default function Board({
   }
 
   const handleDragStart = (event) => {
+    let lastTouchPosition = null;
     event.preventDefault();
 
     if (window.scrollY !== 0 || window.scrollX !== 0) {
@@ -503,32 +502,32 @@ export default function Board({
         return;
       }
 
-      const destination = getKeyAtDomPos({
+      let destinationId = getKeyAtDomPos({
         pos: eventPosition,
         asWhite: isWhitePlayer,
         bounds: chessBoardRect,
       });
 
-      const origin = draggedPiece.parentElement.id;
+      const originId = draggedPiece.parentElement.id;
 
-      if (!destination || !origin) {
+      if (!destinationId || !originId) {
         return;
       }
 
       const isPromotionMove = isPromotion({
-        from: origin,
-        to: destination,
+        from: originId,
+        to: destinationId,
       });
 
       if (isPromotionMove) {
         handlePawnPromotionDialogue({
-          from: origin,
-          to: destination,
+          from: originId,
+          to: destinationId,
         });
         return;
       }
 
-      makeMove({ from: origin, to: destination });
+      makeMove({ from: originId, to: destinationId });
     };
 
     document.addEventListener("mousemove", handleMoveEvent);
