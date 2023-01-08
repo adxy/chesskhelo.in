@@ -51,6 +51,15 @@ a, a:focus {
   border-radius: 50%;
   box-shadow: 0 0 0 6px rgba(0,0,0,0.2) inset;  
 }
+.highlight-last-move:before {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background-color: #00FFFF;
+  opacity: 0.3; 
+  z-index: 1;
+}
 
 @media (max-width: 640px) {
   .visible-mobile {

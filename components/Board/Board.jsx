@@ -154,6 +154,18 @@ export default function Board({
       .includes(to);
   };
 
+  const removeLastMoveHighlight = () => {
+    const elements = document.querySelectorAll(".highlight-last-move");
+    Array.from(elements).forEach((element) =>
+      element.classList.remove("highlight-last-move")
+    );
+  };
+
+  const addLastMoveHighlight = ({ to, from }) =>
+    [document.getElementById(to), document.getElementById(from)].forEach(
+      (element) => element.classList.add("highlight-last-move")
+    );
+
   const makeMove = ({ from, to, promotion = 0 }) => {
     const moveObject = { from, to };
     if (promotion) {
@@ -165,6 +177,8 @@ export default function Board({
 
     if (move) {
       removePossibleMoves();
+      removeLastMoveHighlight();
+      addLastMoveHighlight({ to, from });
 
       if (isMultiplayer) {
         socketState.socket.emit("move", {

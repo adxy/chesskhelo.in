@@ -22,6 +22,7 @@ const Piece = styled.img`
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
+  z-index: 4;
 
   &:active {
     cursor: grabbing;
