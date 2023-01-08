@@ -317,6 +317,7 @@ export default function Board({
     promotedPiece.style.objectFit = "contain";
     promotedPiece.style.height = "100%";
     promotedPiece.style.width = "100%";
+    promotedPiece.style.zIndex = "4";
     if (capture) {
       destinationSquare.removeChild(destinationSquare.firstChild);
     }
