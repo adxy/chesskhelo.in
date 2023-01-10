@@ -34,7 +34,7 @@ export default function Notations({ isWhitePlayer }) {
   return (
     <NotationsContainer viewBox="0 0 100 100">
       {properties.map((row) => (
-        <text key={row.x + row.y} x={row.x} y={row.y}>
+        <text className={"no-select"} key={row.x + row.y} x={row.x} y={row.y}>
           {isWhitePlayer ? row.white : row.black}
         </text>
       ))}

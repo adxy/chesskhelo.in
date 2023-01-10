@@ -36,7 +36,9 @@ export default function Square({ id, squareType, piece }) {
     <SquareBox id={id} squareType={squareType} className="square">
       {piece && (
         <Piece
-          className={`piece ${piece[0] === "w" ? "piece-w" : "piece-b"}`}
+          className={`piece no-select ${
+            piece[0] === "w" ? "piece-w" : "piece-b"
+          }`}
           id={`${id}-${piece}`}
           src={`/images/pieces/${piece}.png`}
         />

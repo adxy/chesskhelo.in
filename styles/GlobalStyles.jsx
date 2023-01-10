@@ -60,6 +60,13 @@ a, a:focus {
   opacity: 0.3; 
   z-index: 1;
 }
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */     
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Chrome and Opera */
+}
 
 @media (max-width: 640px) {
   .visible-mobile {
