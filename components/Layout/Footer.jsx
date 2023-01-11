@@ -97,7 +97,7 @@ const menu = [
   {
     name: "About Us",
     links: [
-      { title: "About ChessKhelo.in", url: "" },
+      { title: "About ChessKhelo.in", url: "/about" },
       { title: "Terms & Condition", url: "/terms" },
       { title: "Privacy Policy", url: "/privacy-policy" },
     ],
