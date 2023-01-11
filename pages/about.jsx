@@ -48,7 +48,8 @@ export default function About() {
       <ul>
         <li>Allow opening the same game only in 1 tab of the browser & location.</li>
         <li>At the moment, users can play multiple multiplayer games at the same time. This will be restricted to only one.</li>
-        <li>A multiplayer game once created never expires, unless the server restarts of course. This will change, each game will expire after a given time, followed by time-controlled multiplayer games in the far future</li>
+        <li>A multiplayer game once created never expires, unless the server restarts of course. This will change, each game will expire after a given time, 
+        followed by time-controlled multiplayer games in the far future</li>
         <li>User Profiles</li>
         <li>Change Avatars, Board Colors, Change Pieces</li>
         <li>Ability to set a custom username (Gamertag)</li>
