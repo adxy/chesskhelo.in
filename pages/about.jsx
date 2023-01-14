@@ -29,7 +29,7 @@ export default function About() {
       <p>Additionally, Chesskhelo welcomes community contributions. The open-source nature of the project means 
       that anyone can contribute to the codebase and help to improve the server. Whether you are an experienced 
       developer or just starting out, you can make a difference by contributing to Chesskhelo. If you are interested 
-      in getting involved with the project, you can check out the Github repository for more information on how to contribute</p>
+      in getting involved with the project, you can check out the Github repository for more information on how to contribute<p>
         
       <p>Overall, Chesskhelo is a robust and exciting project that is designed to bring joy and entertainment to 
       chess enthusiasts with a dedicated development team and a growing community of users and contributors</p>
