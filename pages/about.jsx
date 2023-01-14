@@ -24,12 +24,12 @@ export default function About() {
       <p>Not only Chesskhelo is constantly evolving, but it is also community-driven. The development team 
       is always open to feedback and suggestions from users, and they actively seek out new ideas and features 
       to improve the overall playing experience. If you have an idea for a new feature or have found a bug, you 
-      can contact the development team by raising an issue request on our Github repository<p>
+      can contact the development team by raising an issue request on our Github repository</p>
         
       <p>Additionally, Chesskhelo welcomes community contributions. The open-source nature of the project means 
       that anyone can contribute to the codebase and help to improve the server. Whether you are an experienced 
       developer or just starting out, you can make a difference by contributing to Chesskhelo. If you are interested 
-      in getting involved with the project, you can check out the Github repository for more information on how to contribute<p>
+      in getting involved with the project, you can check out the Github repository for more information on how to contribute</p>
         
       <p>Overall, Chesskhelo is a robust and exciting project that is designed to bring joy and entertainment to 
       chess enthusiasts with a dedicated development team and a growing community of users and contributors</p>
