@@ -30,11 +30,11 @@ Run the development server:
 yarn dev
 ```
 
-Open http://localhost:(PORT YOU DEFINED) with your browser to see the result.
+Open `http://localhost:{Port you defined in .env file}` with your browser to see the result.
 
 ## Contributing
 
-Chesskhelo is an option source projects and contributions are most welcomed!
+Chesskhelo is an open source project and contributions are most welcome!
 
 See [CONTRIBUTING.md](https://github.com/adxy/chesskhelo.in/blob/master/CONTRIBUTING.md) for ways to get started.
 
