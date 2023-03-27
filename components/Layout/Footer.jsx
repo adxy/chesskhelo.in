@@ -97,6 +97,10 @@ const menu = [
   {
     name: "About Us",
     links: [
+      {
+        title: 'The "Why" behind ChessKhelo',
+        url: "https://www.adxy.dev/projects/chesskhelo",
+      },
       { title: "About ChessKhelo.in", url: "/about" },
       { title: "Terms & Condition", url: "/terms" },
       { title: "Privacy Policy", url: "/privacy-policy" },
