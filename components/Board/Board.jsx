@@ -47,6 +47,7 @@ import {
   castleAudio,
   promoteAudio,
   gameStartAudio,
+  moveCheckAudio,
 } from "../../utils/audio";
 
 const BoardContainer = styled.div`
@@ -192,23 +193,24 @@ export default function Board({
       const destinationSquare = document.getElementById(to);
       const draggedPiece = document.getElementById(from).firstChild;
       const destinationPiece = document.getElementById(to).firstChild;
+      const inCheck = chessState.chess.in_check();
 
       switch (move.flags) {
         case STANDARD_CAPTURE:
-          captureAudio.play();
+          inCheck ? moveCheckAudio.play() : captureAudio.play();
           destinationSquare.removeChild(destinationPiece);
           destinationSquare.appendChild(draggedPiece);
           break;
 
         case KING_SIDE_CASTLING:
-          castleAudio.play();
+          inCheck ? moveCheckAudio.play() : castleAudio.play();
           handleCastling({
             moveColor: move.color,
           });
           break;
 
         case QUEEN_SIDE_CASTLING:
-          castleAudio.play();
+          inCheck ? moveCheckAudio.play() : castleAudio.play();
           handleCastling({
             moveColor: move.color,
             kingSide: false,
@@ -216,7 +218,7 @@ export default function Board({
           break;
 
         case NON_CAPTURE_PROMOTION:
-          promoteAudio.play();
+          inCheck ? moveCheckAudio.play() : promoteAudio.play();
           handlePawnPromotion({
             draggedPiece,
             color: move.color,
@@ -226,7 +228,7 @@ export default function Board({
           break;
 
         case CAPTURE_PROMOTION:
-          promoteAudio.play();
+          inCheck ? moveCheckAudio.play() : promoteAudio.play();
           handlePawnPromotion({
             draggedPiece,
             color: move.color,
@@ -238,7 +240,7 @@ export default function Board({
 
         case EN_PASSANT_CAPTURE:
           {
-            captureAudio.play();
+            inCheck ? moveCheckAudio.play() : captureAudio.play();
             // eslint-disable-next-line no-case-declarations
             const capturedSquare = document.getElementById(
               String(move.to[0] + move.from[1])
@@ -249,7 +251,7 @@ export default function Board({
           break;
 
         default:
-          moveSelfAudio.play();
+          inCheck ? moveCheckAudio.play() : moveSelfAudio.play();
           destinationSquare.appendChild(draggedPiece);
       }
     }
@@ -398,6 +400,7 @@ export default function Board({
   const handleDragStart = (event) => {
     let lastTouchPosition = null;
     event.preventDefault();
+    console.log(event);
 
     // remove any focussed element
     document.activeElement.blur();
