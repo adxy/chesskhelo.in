@@ -91,7 +91,10 @@ const menu = [
         title: "Source Code Backend",
         url: "https://github.com/adxy/chesskhelo.in-be",
       },
-      { title: "Contribution Guide", url: "" },
+      {
+        title: "Contribution Guide",
+        url: "https://github.com/adxy/chesskhelo.in/blob/master/CONTRIBUTING.md",
+      },
     ],
   },
   {
